@@ -143,6 +143,10 @@
     }
     .hotel-btn.booking { background: #003580; color: #7ec8ff; border: 1px solid #1a5caa; }
     .hotel-btn.maps { background: #1c3d1c; color: #5de87a; border: 1px solid #2a622a; }
+    .hotel-card.booked { border-color: #2ecc71; background: #0d1f12; }
+    .hotel-card.booked .hotel-name { color: #5de87a; }
+    .booked-badge { display:inline-block; background:#2ecc71; color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; letter-spacing:0.3px; }
+    .section-title.booked-section { border-bottom-color: rgba(46,204,113,0.3); color: #5de87a; }
 
     .food-list { padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; }
     .food-card { background: var(--bg); border-radius: 12px; padding: 11px 12px; border: 1px solid var(--border); }
@@ -219,43 +223,40 @@
 const TRIP = [
   {
     date:"2026-07-31", dow:"Fri", month:"Jul", day:31,
-    title:"Arrive in Montreal",
-    city:"Montreal, QC",
-    drive:null,
+    title:"Toronto → Drummondville",
+    city:"Drummondville, QC",
+    drive:{summary:"~5.5 hrs drive", from:"Toronto, ON", to:"Drummondville, QC", via:"Hwy 401 E → Hwy 20 E", gmaps:"https://www.google.com/maps/dir/Toronto,+ON/Drummondville,+QC", waze:"https://waze.com/ul?ll=45.8833,-72.4833&navigate=yes"},
     activities:[
-      {icon:"🚗", label:"Arrive in Montreal — check in to hotel", note:"Rest up, long drives ahead!"},
-      {icon:"🌆", label:"Old Port (Vieux-Montréal)", note:"Evening stroll along the waterfront — kids love the cobblestone streets & street performers"},
-      {icon:"🎡", label:"Optional: La Ronde (Six Flags Montreal)", note:"Great amusement park if kids have energy after travel"}
+      {icon:"🚗", label:"Start early from Toronto (7–8am)", note:"Long first day — hit the road before traffic builds!"},
+      {icon:"🛑", label:"Rest stop: Kingston, ON (~2.5 hrs)", note:"Tim Hortons & gas · Perfect first break for the kids"},
+      {icon:"🛑", label:"Quick break: Montreal area (~30 min)", note:"Optional Old Port drive-through or snack stop if kids need a stretch"},
+      {icon:"🏨", label:"Check in — Best Western Hotel Universel Drummondville", note:"Check-in from 4:00 PM · 915 rue Hains, Drummondville QC · ✅ BOOKED"}
     ],
     alerts:[],
     hotels:[
-      {name:"Marriott Château Champlain", stars:"★★★★", meta:"Near Old Montreal · Family rooms · Indoor pool · Easy parking", tags:["Pool","Family Rooms","Downtown"], greenTags:["Kid-Friendly"], booking:"https://www.booking.com/search.html?ss=Chateau+Champlain+Montreal", maps:"https://www.google.com/maps/search/Marriott+Chateau+Champlain+Montreal"},
-      {name:"Hotel Bonaventure Montreal", stars:"★★★★", meta:"Rooftop heated outdoor pool · Family suites · Central location", tags:["Rooftop Pool","Family Suites","Central"], greenTags:["Best for Families"], booking:"https://www.booking.com/search.html?ss=Hotel+Bonaventure+Montreal", maps:"https://www.google.com/maps/search/Hotel+Bonaventure+Montreal"},
-      {name:"Delta Hotels Montreal Centre-Ville", stars:"★★★★", meta:"Spacious rooms · Indoor pool · Easy highway access for road trippers", tags:["Indoor Pool","Parking","Road-Trip Friendly"], greenTags:[], booking:"https://www.booking.com/search.html?ss=Delta+Hotels+Montreal+centre", maps:"https://www.google.com/maps/search/Delta+Hotels+Montreal"}
+      {name:"Best Western Hotel Universel Drummondville", stars:"★★★★", meta:"915 rue Hains, Drummondville QC J2C3A1 · Check-in: Jul 31 at 4:00 PM · Check-out: Aug 1 at 12:00 PM · Phone: 1-819-478-4971", tags:["4 Stars","Pool","Restaurant","Parking"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Best+Western+Universel+Drummondville", maps:"https://www.google.com/maps/search/Best+Western+Hotel+Universel+915+rue+Hains+Drummondville", booked:true}
     ],
     food:[
-      {name:"Bombay Mahal", type:"indian", typeLabel:"🍛 Indian", meta:"4.2★ · Authentic North Indian · Butter Chicken, Biryani, Naan — top choice for Indian families in Montreal", kids:"✅ Kids love the butter chicken and naan", maps:"https://www.google.com/maps/search/Bombay+Mahal+Montreal"},
-      {name:"Guru Indian Restaurant", type:"indian", typeLabel:"🍛 Indian", meta:"4.3★ · Wide vegetarian menu · Dosa, Thali, Indo-Chinese — great variety", kids:"✅ Vegetarian-friendly, mild options available", maps:"https://www.google.com/maps/search/Guru+Indian+Restaurant+Montreal"},
-      {name:"La Banquise", type:"local", typeLabel:"🍟 Iconic", meta:"THE Montreal poutine spot · Open 24hrs · Must-try Canadian experience!", kids:"✅ Kids absolutely love poutine — it's a trip tradition!", maps:"https://www.google.com/maps/search/La+Banquise+Montreal"}
+      {name:"Indian / Halal — search Drummondville", type:"indian", typeLabel:"🍛 Indian", meta:"Search Google Maps for Indian or Halal restaurants in Drummondville QC on arrival", kids:"✅ Familiar food on day 1", maps:"https://www.google.com/maps/search/Indian+restaurant+Drummondville+QC"},
+      {name:"Tim Hortons / McDonald's (highway stops)", type:"family", typeLabel:"🍟 Quick", meta:"Multiple options at highway exits along Hwy 401 & 20 — good for lunch on the go", kids:"✅ Kids love Timbits on road trips", maps:"https://www.google.com/maps/search/Tim+Hortons+Hwy+401+Ontario"},
+      {name:"Resto La Facette — Drummondville", type:"local", typeLabel:"🍽️ Local", meta:"Popular local restaurant in Drummondville · Good casual dinner after a long drive", kids:"✅ Family-friendly atmosphere", maps:"https://www.google.com/maps/search/restaurant+Drummondville+QC"}
     ]
   },
   {
     date:"2026-08-01", dow:"Sat", month:"Aug", day:1,
-    title:"Montreal → Grand Falls → Moncton",
+    title:"Drummondville → Grand Falls → Moncton",
     city:"Moncton, NB",
-    drive:{summary:"~7 hrs total with Grand Falls stop", from:"Montreal, QC", to:"Moncton, NB", via:"Hwy 20 E → Trans-Canada → Grand Falls, NB", gmaps:"https://www.google.com/maps/dir/Montreal,+QC/Grand+Falls,+NB/Moncton,+NB", waze:"https://waze.com/ul?ll=46.0487,-64.7878&navigate=yes"},
+    drive:{summary:"~6.5 hrs total with Grand Falls stop", from:"Drummondville, QC", to:"Moncton, NB", via:"Hwy 20 E → Trans-Canada → Grand Falls, NB → Moncton", gmaps:"https://www.google.com/maps/dir/Drummondville,+QC/Grand+Falls,+NB/Moncton,+NB", waze:"https://waze.com/ul?ll=46.0487,-64.7878&navigate=yes"},
     activities:[
-      {icon:"⏰", label:"Start early (7–8am)", note:"Long drive day — early start means more daylight at Grand Falls"},
-      {icon:"💧", label:"Grand Falls Gorge (Grand-Sault)", note:"Stunning gorge & waterfall · Free entry · 45 min stop · Great photo spot"},
+      {icon:"⏰", label:"Check out by 12:00 PM & start early", note:"Long drive day — early start means more daylight at Grand Falls"},
+      {icon:"💧", label:"Grand Falls Gorge (Grand-Sault)", note:"Stunning gorge & waterfall · Free entry · 45 min stop · Great photo spot — well worth the detour"},
       {icon:"🥪", label:"Lunch in Grand Falls", note:"Good rest stop — stretch legs, feed the kids"},
       {icon:"🚗", label:"Continue to Moncton", note:"~2.5 hrs from Grand Falls on Trans-Canada"},
-      {icon:"🏨", label:"Check in Moncton — early night", note:"Tomorrow is a big sightseeing day!"}
+      {icon:"🏨", label:"Check in — Holiday Inn Express Moncton", note:"Check-in from 3:00 PM · 777 Mapleton Drive · ✅ BOOKED · 2 nights here!"}
     ],
     alerts:[],
     hotels:[
-      {name:"Delta Hotels Beauséjour", stars:"★★★★", meta:"Best hotel in Moncton · Indoor pool · Kids love it · Right downtown", tags:["Pool","Downtown","Restaurant"], greenTags:["Top Pick"], booking:"https://www.booking.com/search.html?ss=Delta+Hotels+Beausejour+Moncton", maps:"https://www.google.com/maps/search/Delta+Hotels+Beausejour+Moncton"},
-      {name:"Crowne Plaza Moncton Downtown", stars:"★★★★", meta:"Indoor pool · Spacious rooms · Close to Magnetic Hill area", tags:["Indoor Pool","Spacious","Parking"], greenTags:[], booking:"https://www.booking.com/search.html?ss=Crowne+Plaza+Moncton", maps:"https://www.google.com/maps/search/Crowne+Plaza+Moncton"},
-      {name:"Comfort Inn & Suites Moncton", stars:"★★★", meta:"Budget-friendly · Free hot breakfast · Family rooms with bunk beds", tags:["Free Breakfast","Budget","Family Rooms"], greenTags:["Good Value"], booking:"https://www.booking.com/search.html?ss=Comfort+Inn+Moncton+NB", maps:"https://www.google.com/maps/search/Comfort+Inn+Moncton"}
+      {name:"Holiday Inn Express & Suites Moncton", stars:"★★★", meta:"777 Mapleton Drive, Moncton NB E1G2K5 · Check-in: Aug 1 at 3:00 PM · Check-out: Aug 3 at 12:00 PM (2 nights) · Phone: 1-506-854-2929", tags:["Free Breakfast","Pool","2 Nights Booked"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Holiday+Inn+Express+Moncton", maps:"https://www.google.com/maps/search/Holiday+Inn+Express+Suites+777+Mapleton+Drive+Moncton", booked:true}
     ],
     food:[
       {name:"Indian roadside stop (Grand Falls area)", type:"indian", typeLabel:"🍛 Indian", meta:"Search for Indian restaurants near Grand Falls NB for a familiar lunch mid-drive", kids:"✅ Familiar food keeps kids happy on a long drive day", maps:"https://www.google.com/maps/search/Indian+restaurant+Grand+Falls+NB"},
@@ -267,7 +268,7 @@ const TRIP = [
     date:"2026-08-02", dow:"Sun", month:"Aug", day:2,
     title:"Moncton Sightseeing Day",
     city:"Moncton, NB",
-    drive:{summary:"Sightseeing loop ~3 hrs total driving", from:"Moncton Hotel", to:"Moncton Hotel", via:"Hopewell Rocks → Dickson Falls → Cape Enrage → Shediac → Magnetic Hill", gmaps:"https://www.google.com/maps/dir/Moncton,+NB/Hopewell+Rocks,+NB/Cape+Enrage,+NB/Shediac,+NB/Magnetic+Hill,+Moncton,+NB", waze:"https://waze.com/ul?ll=45.8682,-64.5918&navigate=yes"},
+    drive:{summary:"Sightseeing loop ~3 hrs total driving", from:"Holiday Inn Express Moncton", to:"Holiday Inn Express Moncton", via:"Hopewell Rocks → Dickson Falls → Cape Enrage → Shediac → Magnetic Hill", gmaps:"https://www.google.com/maps/dir/Moncton,+NB/Hopewell+Rocks,+NB/Cape+Enrage,+NB/Shediac,+NB/Magnetic+Hill,+Moncton,+NB", waze:"https://waze.com/ul?ll=45.8682,-64.5918&navigate=yes"},
     activities:[
       {icon:"🌊", label:"Hopewell Rocks (Flower Pot Rocks)", note:"Go at LOW TIDE — walk on the ocean floor between 15m high rock formations. Kids LOVE this! Check tides: hopewell.rocks/tides · $8-10/person"},
       {icon:"💧", label:"Dickson Falls — Fundy National Park", note:"Easy 1km loop boardwalk through old-growth forest. All ages manage it well."},
@@ -277,7 +278,7 @@ const TRIP = [
     ],
     alerts:["🌊 Check tide times at hopewell.rocks/tides — you MUST go at low tide to walk on the ocean floor. This is the #1 highlight of the trip for kids!"],
     hotels:[
-      {name:"Delta Hotels Beauséjour (Night 2)", stars:"★★★★", meta:"Stay the same hotel — no repacking! Kids love the pool after a big day", tags:["Stay 2nd Night","Pool"], greenTags:["Recommended"], booking:"https://www.booking.com/search.html?ss=Delta+Hotels+Beausejour+Moncton", maps:"https://www.google.com/maps/search/Delta+Hotels+Beausejour+Moncton"}
+      {name:"Holiday Inn Express & Suites Moncton (Night 2 of 2)", stars:"★★★", meta:"777 Mapleton Drive, Moncton NB · 2nd night of 2 · Check-out: Aug 3 at 12:00 PM · Phone: 1-506-854-2929", tags:["Night 2 of 2","Pool","Free Breakfast"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Holiday+Inn+Express+Moncton", maps:"https://www.google.com/maps/search/Holiday+Inn+Express+Suites+777+Mapleton+Drive+Moncton", booked:true}
     ],
     food:[
       {name:"Tidal Watch Inn Restaurant (near Hopewell)", type:"local", typeLabel:"🦞 Seafood", meta:"Right near Hopewell Rocks · Fresh local seafood · Good lunch stop mid-sightseeing", kids:"✅ Fish & chips that kids enjoy", maps:"https://www.google.com/maps/search/restaurant+near+Hopewell+Rocks+NB"},
@@ -295,14 +296,12 @@ const TRIP = [
       {icon:"🏖️", label:"Cavendish Beach, PEI", note:"Red sand beaches · Ocean swimming · Build sandcastles · Kids will love the warm water · 1–2 hrs"},
       {icon:"📖", label:"Green Gables Heritage Place", note:"Anne of Green Gables historic house · 5 min from Cavendish · Great for the girls!"},
       {icon:"🍽️", label:"Lunch in Charlottetown", note:"Capital of PEI — waterfront restaurants, great fresh seafood"},
-      {icon:"⛴️", label:"Northumberland Ferry: Wood Islands → Pictou NS", note:"75 min crossing · Has cafeteria on board · Scenic Bay of Fundy views"},
+      {icon:"⛴️", label:"Northumberland Ferry: Wood Islands → Pictou NS — 6:00 PM ✅ BOOKED", note:"Departure 6:00 PM · 75 min crossing · Has cafeteria on board · Arrive Pictou ~7:15 PM · Then ~2.5 hrs drive to Baddeck"},
       {icon:"🚗", label:"Drive Pictou → Baddeck", note:"~2.5 hrs through stunning Cape Breton landscape"}
     ],
-    alerts:["⚠️ MUST BOOK Northumberland Ferry in advance — it fills up weeks ahead in summer! Book link below."],
-    bookLink:{label:"🎫 Book Northumberland Ferry (Wood Islands → Pictou)", url:"https://www.ferries.ca/book/departure?departureDate=2026-08-03&tripType=OW&departureRoute=WICB&adults=4&seniors=1&children=2&language=en"},
+    alerts:["⛴️ Northumberland Ferry booked at 6:00 PM ✅ — Wood Islands → Pictou. Aim to arrive at the ferry terminal by 5:15 PM. After landing in Pictou (~7:15 PM), it's ~2.5 hrs drive to Baddeck. Arrive ~9:45 PM — plan a simple dinner en route."],
     hotels:[
-      {name:"Inverary Resort Baddeck", stars:"★★★★", meta:"Best resort in Baddeck · Lake Bras d'Or views · Cottages & hotel rooms · Pool · Stunning location", tags:["Lake Views","Cottages","Pool","Restaurant"], greenTags:["Top Pick","Kid-Friendly"], booking:"https://www.booking.com/search.html?ss=Inverary+Resort+Baddeck+Nova+Scotia", maps:"https://www.google.com/maps/search/Inverary+Resort+Baddeck+Nova+Scotia"},
-      {name:"Telegraph House Hotel", stars:"★★★", meta:"Historic hotel in Baddeck village · Walking distance to waterfront & restaurants · Good value", tags:["Historic","Central","Walk to Everything"], greenTags:["Good Value"], booking:"https://www.booking.com/search.html?ss=Telegraph+House+Baddeck+NS", maps:"https://www.google.com/maps/search/Telegraph+House+Baddeck"}
+      {name:"Silver Dart Lodge — Baddeck", stars:"★★★★", meta:"Baddeck, NS · Check-in: Aug 3 at 3:00 PM · Check-out: Aug 4 at 11:00 AM · Itinerary: 73422205028898 · Beautiful waterfront lodge on Lake Bras d'Or", tags:["Lake Views","Waterfront","Restaurant"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Silver+Dart+Lodge+Baddeck", maps:"https://www.google.com/maps/search/Silver+Dart+Lodge+Baddeck+Nova+Scotia", booked:true}
     ],
     food:[
       {name:"Charlottetown Farmers Market", type:"family", typeLabel:"🥗 Market", meta:"Fresh local food, sandwiches, pastries — perfect lunch stop in Charlottetown", kids:"✅ Kids love the variety and fresh desserts", maps:"https://www.google.com/maps/search/Charlottetown+Farmers+Market+PEI"},
@@ -314,18 +313,18 @@ const TRIP = [
     date:"2026-08-04", dow:"Tue", month:"Aug", day:4,
     title:"Cabot Trail Scenic Drive",
     city:"Chéticamp, NS",
-    drive:{summary:"~3 hrs of scenic driving (full day with stops)", from:"Baddeck, NS", to:"Chéticamp, NS", via:"Cabot Trail · Cape Breton Highlands · Skyline Trail", gmaps:"https://www.google.com/maps/dir/Baddeck,+NS/Cape+Breton+Highlands+National+Park/Cheticamp,+NS", waze:"https://waze.com/ul?ll=46.6242,-60.9781&navigate=yes"},
+    drive:{summary:"~3 hrs scenic driving (full day with stops)", from:"Baddeck, NS (Silver Dart Lodge — check out by 11am)", to:"Chéticamp, NS", via:"Cabot Trail · Cape Breton Highlands · Skyline Trail", gmaps:"https://www.google.com/maps/dir/Baddeck,+NS/Cape+Breton+Highlands+National+Park/Cheticamp,+NS", waze:"https://waze.com/ul?ll=46.6242,-60.9781&navigate=yes"},
     activities:[
+      {icon:"🏨", label:"Check out Silver Dart Lodge by 11:00 AM", note:"Pack up & hit the Cabot Trail!"},
       {icon:"🚗", label:"Drive the Cabot Trail (one of Canada's greatest scenic drives!)", note:"Dozens of ocean lookouts — stop at every single one · Slow and enjoy it"},
       {icon:"🥾", label:"Skyline Trail Hike", note:"4.5 km easy loop · Incredible ocean views from clifftop · Kids handle it well · 1.5–2 hrs"},
       {icon:"🦅", label:"Mary Ann Falls", note:"Short walk to a beautiful waterfall — kids love waterfalls!"},
       {icon:"🌊", label:"Cabot Trail North Mountain Lookouts", note:"Pull off for photos at every lookout heading north — views are jaw-dropping"},
-      {icon:"🏘️", label:"Arrive Chéticamp — explore Acadian village", note:"Small fishing community · Great seafood dinner · Early night for tomorrow"}
+      {icon:"🏘️", label:"Arrive Chéticamp — check in by 4:00 PM", note:"Check-in from 16:00 · 15456 Cabot Trail, Chéticamp · ✅ BOOKED · 2 rooms"}
     ],
     alerts:[],
     hotels:[
-      {name:"Laurie's Motel & Restaurant — Chéticamp", stars:"★★★", meta:"Well-located in Chéticamp · Ocean views · Clean family rooms · Restaurant on site", tags:["Ocean Views","Restaurant","Affordable"], greenTags:["Convenient"], booking:"https://www.booking.com/search.html?ss=Lauries+Motel+Cheticamp", maps:"https://www.google.com/maps/search/Lauries+Motel+Cheticamp+Nova+Scotia"},
-      {name:"Chéticamp Outfitters Inn", stars:"★★★", meta:"Comfortable rooms near national park entrance · Good for families", tags:["Near Park","Family","Simple"], greenTags:[], booking:"https://www.booking.com/search.html?ss=hotel+Cheticamp+Cape+Breton+Nova+Scotia", maps:"https://www.google.com/maps/search/hotel+Cheticamp+Nova+Scotia"}
+      {name:"Booked Accommodation — Cabot Trail, Chéticamp", stars:"★★★", meta:"15456 Cabot Trail, B0E 1H0 Chéticamp, NS · Check-in: Aug 4 from 4:00 PM · Check-out: Aug 5 by 11:00 AM · 2 rooms · 5 adults + 2 children (ages 7 & 10)", tags:["2 Rooms","Cabot Trail","Scenic"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=15456+Cabot+Trail+Cheticamp", maps:"https://www.google.com/maps/search/15456+Cabot+Trail+Cheticamp+Nova+Scotia", booked:true}
     ],
     food:[
       {name:"Restaurant Étoile du Matin — Chéticamp", type:"local", typeLabel:"🦞 Acadian", meta:"Best Acadian cooking in Chéticamp · Fish cakes, rappie pie, fresh seafood", kids:"✅ Home-style cooking the kids will enjoy", maps:"https://www.google.com/maps/search/restaurant+Cheticamp+Nova+Scotia"},
@@ -335,71 +334,72 @@ const TRIP = [
   },
   {
     date:"2026-08-05", dow:"Wed", month:"Aug", day:5,
-    title:"Finish Cabot Trail → Annapolis Royal",
-    city:"Annapolis Royal, NS",
-    drive:{summary:"~4.5 hrs driving", from:"Chéticamp, NS", to:"Annapolis Royal, NS", via:"Inverness · Margaree · Trans-Canada Hwy 104 → Hwy 101 W", gmaps:"https://www.google.com/maps/dir/Cheticamp,+NS/Inverness,+NS/Annapolis+Royal,+NS", waze:"https://waze.com/ul?ll=44.7423,-65.5086&navigate=yes"},
+    title:"Finish Cabot Trail → Digby Pines Resort",
+    city:"Digby, NS",
+    drive:{summary:"~4.5 hrs driving", from:"Chéticamp, NS (check out by 11am)", to:"Digby, NS", via:"Inverness · Margaree · Trans-Canada Hwy 104 → Hwy 101 W → Digby", gmaps:"https://www.google.com/maps/dir/Cheticamp,+NS/Inverness,+NS/Digby,+NS", waze:"https://waze.com/ul?ll=44.6209,-65.7607&navigate=yes"},
     activities:[
+      {icon:"🏨", label:"Check out Chéticamp by 11:00 AM", note:"Pack up and continue south on the Cabot Trail"},
       {icon:"🏖️", label:"Inverness Beach", note:"Long sandy beach on Cape Breton's west coast — great for a morning swim stop"},
       {icon:"🌿", label:"Margaree Valley", note:"Drive through lush Scottish highland-like valley · Perfect photo stop"},
-      {icon:"🚗", label:"Cross back to mainland NS via Trans-Canada", note:"~2 hrs from Cape Breton to Annapolis Royal area"},
-      {icon:"🏰", label:"Fort Anne National Historic Site", note:"Kids love exploring the old earthworks & cannons · Free admission for kids"},
-      {icon:"🌸", label:"Annapolis Royal Historic Gardens", note:"Beautiful 17-acre garden · Evening walk · Very relaxing after driving"}
+      {icon:"🚗", label:"Cross back to mainland NS via Trans-Canada", note:"~2 hrs from Cape Breton to Annapolis Valley area"},
+      {icon:"🏰", label:"Fort Anne National Historic Site — Annapolis Royal (en route)", note:"Quick 30-min stop · Kids love the old earthworks & cannons · Free admission for kids"},
+      {icon:"🌸", label:"Arrive Digby Pines Golf Resort", note:"Check-in from 4:00 PM · Stunning hillside resort overlooking Annapolis Basin · ✅ BOOKED"}
     ],
     alerts:[],
     hotels:[
-      {name:"Annapolis Royal Inn", stars:"★★★", meta:"Well-located near historic sites · Family rooms · Clean and affordable", tags:["Central","Family Rooms","Affordable"], greenTags:["Good Location"], booking:"https://www.booking.com/search.html?ss=Annapolis+Royal+Inn+Nova+Scotia", maps:"https://www.google.com/maps/search/Annapolis+Royal+Inn+Nova+Scotia"},
-      {name:"Hillsdale House Inn", stars:"★★★★", meta:"Charming Victorian B&B · Full breakfast included · Beautiful historic building", tags:["B&B","Breakfast Included","Unique"], greenTags:["Special Stay"], booking:"https://www.booking.com/search.html?ss=Hillsdale+House+Inn+Annapolis+Royal", maps:"https://www.google.com/maps/search/Hillsdale+House+Inn+Annapolis+Royal"}
+      {name:"Digby Pines Golf Resort and Spa", stars:"★★★★", meta:"Digby, NS · Check-in: Aug 5 at 4:00 PM · Check-out: Aug 6 at 11:00 AM · Itinerary: 73426010909609 · Stunning hillside resort overlooking Annapolis Basin · Golf, Spa & Pool on site", tags:["Golf","Spa","Ocean Views","Pool","Restaurant"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Digby+Pines+Golf+Resort+NS", maps:"https://www.google.com/maps/search/Digby+Pines+Golf+Resort+and+Spa+Digby+NS", booked:true}
     ],
     food:[
-      {name:"Bistro East Annapolis Royal", type:"family", typeLabel:"🍽️ Casual", meta:"Popular local bistro · Fresh ingredients · Relaxed family dining", kids:"✅ Family-friendly menu with good variety", maps:"https://www.google.com/maps/search/Bistro+restaurant+Annapolis+Royal+Nova+Scotia"},
-      {name:"Café M Grand Pré (en route)", type:"family", typeLabel:"☕ Café", meta:"Nice stop along the Annapolis Valley route · Sandwiches, coffee, baked goods", kids:"✅ Good quick lunch stop mid-drive", maps:"https://www.google.com/maps/search/cafe+Annapolis+Valley+Nova+Scotia"},
-      {name:"Seafood on the wharf–Annapolis", type:"local", typeLabel:"🦞 Seafood", meta:"Fresh catches right by the water · Lobster rolls, chowder, fish & chips", kids:"⚠️ Fish & chips option for kids", maps:"https://www.google.com/maps/search/seafood+restaurant+Annapolis+Royal"}
+      {name:"Pines Dining Room — Digby Pines Resort", type:"local", typeLabel:"🍽️ Resort", meta:"On-site restaurant at Digby Pines · Fresh Nova Scotia seafood · Great treat after a big drive day!", kids:"✅ Great setting, varied menu — treat the family tonight!", maps:"https://www.google.com/maps/search/Digby+Pines+Golf+Resort+restaurant"},
+      {name:"Café / stop en route — Annapolis Valley", type:"family", typeLabel:"☕ Café", meta:"Good stop along the Annapolis Valley route · Sandwiches, coffee, baked goods for lunch", kids:"✅ Good quick lunch stop mid-drive", maps:"https://www.google.com/maps/search/cafe+Annapolis+Valley+Nova+Scotia"},
+      {name:"Digby Wharf Seafood (next morning)", type:"local", typeLabel:"🦞 Seafood", meta:"Digby is famous for its SCALLOPS — best in Canada! · Grab some from the wharf before heading out Aug 6", kids:"⚠️ Fish & chips option for kids", maps:"https://www.google.com/maps/search/seafood+wharf+Digby+Nova+Scotia"}
     ]
   },
   {
     date:"2026-08-06", dow:"Thu", month:"Aug", day:6,
-    title:"Whale Watching · Digby Ferry → Fredericton",
-    city:"Fredericton, NB",
-    drive:{summary:"~2 hrs drive + 3 hr ferry + 1.5 hrs", from:"Annapolis Royal, NS", to:"Fredericton, NB", via:"Digby (whale watch) → Bay of Fundy Ferry → Saint John NB → Fredericton", gmaps:"https://www.google.com/maps/dir/Annapolis+Royal,+NS/Digby,+NS/Saint+John,+NB/Fredericton,+NB", waze:"https://waze.com/ul?ll=45.9636,-66.6431&navigate=yes"},
+    title:"Digby → Whale Watch → Moncton",
+    city:"Moncton, NB",
+    drive:{summary:"~4 hrs direct drive (or ~5.5 hrs via Bay Ferries)", from:"Digby, NS (check out by 11am)", to:"Moncton, NB", via:"Option A (Recommended): Digby → Windsor → Truro → Amherst → Moncton (~4 hrs) | Option B: Bay Ferries Digby→Saint John + drive to Moncton (~5.5 hrs)", gmaps:"https://www.google.com/maps/dir/Digby,+NS/Windsor,+NS/Truro,+NS/Amherst,+NS/Moncton,+NB", waze:"https://waze.com/ul?ll=46.0487,-64.7878&navigate=yes"},
     activities:[
-      {icon:"🐋", label:"Brier Island Whale Watch (Morning Tour)", note:"3–4 hr boat tour · Humpback & Finback whales guaranteed · Kids will remember this forever! BOOK IN ADVANCE"},
-      {icon:"🚗", label:"Drive to Digby ferry terminal", note:"~45 min from Brier Island back to Digby"},
-      {icon:"⛴️", label:"Bay Ferries: Digby NS → Saint John NB", note:"~3 hr crossing · Cafeteria on board · Great sunset views over Bay of Fundy"},
-      {icon:"🚗", label:"Drive Saint John → Fredericton", note:"~1.5 hrs on Hwy 1"},
-      {icon:"🏙️", label:"Arrive Fredericton — riverfront walk (if energy!)", note:"Capital city · Beautiful St. John River · Parliament buildings"}
+      {icon:"🐋", label:"Brier Island Whale Watch — 1:30 PM ✅ BOOKED", note:"3–4 hr boat tour departing 1:30 PM · Humpback & Finback whales · Kids will remember this forever! · Depart Digby Pines by 10:30 AM to reach Brier Island in time"},
+      {icon:"🏨", label:"Check out Digby Pines by 11:00 AM", note:"Grab Digby scallops from the wharf before leaving!"},
+      {icon:"🚗", label:"Option A — Direct drive to Moncton (Recommended)", note:"Digby → Windsor → Truro → Amherst → Moncton · ~4 hrs · Straightforward highway · Arrive in time to check in comfortably"},
+      {icon:"⛴️", label:"Option B — Bay Ferries: Digby → Saint John + drive to Moncton", note:"~3 hr crossing + 1.5 hr drive to Moncton · Great ocean scenery · Book in advance if choosing this · Adds 1.5 hrs vs direct drive"},
+      {icon:"🏨", label:"Check in — Days Inn & Suites Moncton", note:"Check-in from 3:00 PM · 2515 Mountain Road · ✅ BOOKED · Last night of the Maritime adventure!"}
     ],
     alerts:[
-      "🐋 Book Brier Island Whale Watch IN ADVANCE — very limited spots, sells out fast in summer.",
-      "⛴️ Book Bay Ferries (Digby ↔ Saint John) in advance — fills up in peak season."
+      "🐋 Brier Island Whale Watch booked at 1:30 PM ✅ — Depart Digby Pines by 10:30 AM. Drive to Westport, Brier Island (~1.5 hrs including 2 short ferry crossings). Tour ends ~4:30–5:00 PM. Then drive to Moncton (~4 hrs) — arrive ~9:00 PM. Pack snacks for the kids!",
+      "⛴️ If taking Bay Ferries (Digby → Saint John): book in advance. Direct drive to Moncton via Truro is faster and simpler."
     ],
-    bookLink:{label:"⛴️ Book Bay Ferries: Digby → Saint John", url:"https://www.bayferries.com"},
+    bookLink:{label:"⛴️ Optional: Book Bay Ferries Digby → Saint John", url:"https://www.bayferries.com"},
     hotels:[
-      {name:"Delta Hotels Fredericton", stars:"★★★★", meta:"Best hotel in Fredericton · St. John River views · Indoor pool · Downtown", tags:["River Views","Indoor Pool","Downtown"], greenTags:["Top Pick"], booking:"https://www.booking.com/search.html?ss=Delta+Hotels+Fredericton", maps:"https://www.google.com/maps/search/Delta+Hotels+Fredericton"},
-      {name:"Crowne Plaza Fredericton Lord Beaverbrook", stars:"★★★★", meta:"Historic grand hotel on the river · Family rooms · Walk to parliament", tags:["Historic","River Views","Central"], greenTags:["Unique Stay"], booking:"https://www.booking.com/search.html?ss=Crowne+Plaza+Fredericton", maps:"https://www.google.com/maps/search/Crowne+Plaza+Fredericton"}
+      {name:"Days Inn & Suites by Wyndham Moncton", stars:"★★★", meta:"2515 Mountain Road, Moncton NB E1G2W4 · Check-in: Aug 6 at 3:00 PM · Check-out: Aug 7 at 11:00 AM · Phone: 1-506-384-1050", tags:["Pool","Free Breakfast","Parking"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Days+Inn+Suites+Moncton", maps:"https://www.google.com/maps/search/Days+Inn+Suites+2515+Mountain+Road+Moncton", booked:true}
     ],
     food:[
-      {name:"Sitar Indian Restaurant — Fredericton", type:"indian", typeLabel:"🍛 Indian", meta:"4.3★ · Best Indian food in Fredericton · Curries, biryani, vegetarian meals — perfect after days of seafood!", kids:"✅ Kids will love the familiar flavours after days of Nova Scotia seafood", maps:"https://www.google.com/maps/search/Indian+restaurant+Fredericton+NB"},
-      {name:"Isaac's Way Restaurant", type:"family", typeLabel:"🥗 Local", meta:"Popular local Fredericton spot · Good variety of mains · Casual relaxed atmosphere", kids:"✅ Kids menu available", maps:"https://www.google.com/maps/search/Isaacs+Way+Fredericton"},
-      {name:"Mexicali Rosa's (backup)", type:"family", typeLabel:"🌮 Casual", meta:"Tex-Mex chain · Kids love tacos & quesadillas · Easy family option", kids:"✅ Always a kid crowd-pleaser", maps:"https://www.google.com/maps/search/Mexicali+Rosas+Fredericton"}
+      {name:"Sitar Indian Restaurant — Moncton", type:"indian", typeLabel:"🍛 Indian", meta:"Best Indian food in Moncton · Curries, biryani, vegetarian — perfect after days of Nova Scotia seafood!", kids:"✅ Kids will love the familiar flavours after a long journey", maps:"https://www.google.com/maps/search/Indian+restaurant+Moncton+NB"},
+      {name:"Pump House Brewery", type:"local", typeLabel:"🍺 Local", meta:"Great pub food — burgers, wings · Easy family dinner near Days Inn", kids:"✅ Kids menu available", maps:"https://www.google.com/maps/search/Pump+House+Brewery+Moncton"},
+      {name:"Tim Hortons — highway stops en route", type:"family", typeLabel:"☕ Quick", meta:"Multiple Tims along Truro/Amherst/Moncton highway corridor · Perfect noon quick break", kids:"✅ Timbits en route!", maps:"https://www.google.com/maps/search/Tim+Hortons+Truro+NS"}
     ]
   },
   {
     date:"2026-08-07", dow:"Fri", month:"Aug", day:7,
-    title:"Fredericton → Montreal",
+    title:"Moncton → Montreal",
     city:"Montreal, QC",
-    drive:{summary:"~5.5 hrs drive", from:"Fredericton, NB", to:"Montreal, QC", via:"Trans-Canada Hwy 2 → Hwy 20 W", gmaps:"https://www.google.com/maps/dir/Fredericton,+NB/Montreal,+QC", waze:"https://waze.com/ul?ll=45.5017,-73.5673&navigate=yes"},
+    drive:{summary:"~8 hrs drive", from:"Moncton, NB (check out by 11am)", to:"Montreal, QC", via:"Trans-Canada Hwy 2 W → Hwy 20 W · via Rivière-du-Loup", gmaps:"https://www.google.com/maps/dir/Moncton,+NB/Montreal,+QC", waze:"https://waze.com/ul?ll=45.5017,-73.5673&navigate=yes"},
     activities:[
-      {icon:"🚗", label:"Morning drive to Montreal (~5.5 hrs)", note:"Smooth Trans-Canada highway · Good rest stops along the way"},
-      {icon:"🛑", label:"Rest stop: Rivière-du-Loup", note:"Good halfway point · Gas, food, stretch legs"},
-      {icon:"🏨", label:"Check in Montreal (same area as first night)", note:"Familiar surroundings — the kids will feel at home"},
-      {icon:"🎉", label:"Celebration dinner — almost done!", note:"Treat the family to a great dinner for completing the trip"}
+      {icon:"🚗", label:"Check out & hit the road early (8am)", note:"Long final drive day — ~8 hrs to Montreal"},
+      {icon:"🛑", label:"Rest stop: Rivière-du-Loup, QC (~4 hrs)", note:"Excellent halfway point · Gas, food, washrooms · Great St. Lawrence River views"},
+      {icon:"🛑", label:"Optional quick stop: Québec City (~30 min)", note:"Drive through Old Québec or take a riverside walk — beautiful fortified skyline"},
+      {icon:"🏨", label:"Arrive & check in Montreal", note:"Evening stroll on Old Port waterfront — kids love the cobblestones & street performers"},
+      {icon:"🎉", label:"Celebration dinner", note:"Almost home! Treat the family to a great dinner for completing the Maritime adventure"}
     ],
     alerts:[],
     hotels:[
-      {name:"Same Montreal hotel as July 31", stars:"★★★★", meta:"Book same hotel as first night — familiar to kids, nearby restaurants, easy", tags:["Familiar","Pool","Downtown"], greenTags:["Easy Choice"], booking:"https://www.booking.com/search.html?ss=hotel+montreal+downtown", maps:"https://www.google.com/maps/search/hotel+downtown+montreal"}
+      {name:"Hotel Bonaventure Montreal", stars:"★★★★", meta:"Rooftop heated outdoor pool · Family suites · Central location · Good for 1 night before final drive home", tags:["Rooftop Pool","Family Suites","Central"], greenTags:["Recommended"], booking:"https://www.booking.com/search.html?ss=Hotel+Bonaventure+Montreal", maps:"https://www.google.com/maps/search/Hotel+Bonaventure+Montreal"},
+      {name:"Delta Hotels Montreal Centre-Ville", stars:"★★★★", meta:"Spacious rooms · Indoor pool · Easy highway access out the next morning toward Toronto", tags:["Indoor Pool","Parking","Road-Trip Friendly"], greenTags:[], booking:"https://www.booking.com/search.html?ss=Delta+Hotels+Montreal+centre", maps:"https://www.google.com/maps/search/Delta+Hotels+Montreal"}
     ],
     food:[
-      {name:"Masala Indian Brasserie — Montreal", type:"indian", typeLabel:"🍛 Indian", meta:"Celebrate the end of the trip with North Indian feast! Great for large family groups", kids:"✅ Finish the trip with the food the kids love most", maps:"https://www.google.com/maps/search/Indian+restaurant+Montreal+downtown"},
+      {name:"Masala Indian Brasserie — Montreal", type:"indian", typeLabel:"🍛 Indian", meta:"Celebrate with a North Indian feast! Great for large family groups", kids:"✅ The food of home — perfect celebration dinner before final drive", maps:"https://www.google.com/maps/search/Indian+restaurant+Montreal+downtown"},
       {name:"Schwartz's Deli — Montreal Smoked Meat", type:"local", typeLabel:"🥩 Iconic", meta:"World-famous Montreal smoked meat sandwich · A bucket-list Canadian food experience — do not skip!", kids:"✅ Sandwiches that kids absolutely love", maps:"https://www.google.com/maps/search/Schwartzs+Deli+Montreal"}
     ]
   },
@@ -523,15 +523,19 @@ function buildPanel(d, isToday) {
 
   // Hotels
   if (d.hotels.length) {
-    html += `<div class="section-card"><div class="section-title"><span>🏨</span> Recommended Hotels</div><div class="hotel-list">`;
+    const hasBooked = d.hotels.some(h => h.booked);
+    const sectionTitle = hasBooked ? '✅ Your Booked Hotel' : '🏨 Recommended Hotels';
+    const titleClass = hasBooked ? 'section-title booked-section' : 'section-title';
+    html += `<div class="section-card"><div class="${titleClass}"><span>${hasBooked ? '✅' : '🏨'}</span> ${hasBooked ? 'Your Booked Hotel' : 'Recommended Hotels'}</div><div class="hotel-list">`;
     d.hotels.forEach(h => {
-      html += `<div class="hotel-card">
-        <div class="hotel-top"><div class="hotel-name">${h.name}</div><div class="hotel-stars">${h.stars}</div></div>
+      const cardClass = h.booked ? 'hotel-card booked' : 'hotel-card';
+      html += `<div class="${cardClass}">
+        <div class="hotel-top"><div class="hotel-name">${h.name}${h.booked ? '<span class="booked-badge">BOOKED ✅</span>' : ''}</div><div class="hotel-stars">${h.stars}</div></div>
         <div class="hotel-meta">${h.meta}</div>
-        <div class="hotel-tags">${h.tags.map(t=>`<span class="hotel-tag">${t}</span>`).join('')}${h.greenTags.map(t=>`<span class="hotel-tag green">${t}</span>`).join('')}</div>
+        <div class="hotel-tags">${h.tags.map(t=>`<span class="hotel-tag">${t}</span>`).join('')}${h.greenTags.filter(t=>t!=='BOOKED ✅').map(t=>`<span class="hotel-tag green">${t}</span>`).join('')}</div>
         <div class="hotel-btns">
-          <a href="${h.booking}" target="_blank" class="hotel-btn booking">🛏️ Booking.com</a>
-          <a href="${h.maps}" target="_blank" class="hotel-btn maps">📍 Map</a>
+          <a href="${h.maps}" target="_blank" class="hotel-btn maps">📍 Map &amp; Directions</a>
+          ${!h.booked ? `<a href="${h.booking}" target="_blank" class="hotel-btn booking">🛏️ Booking.com</a>` : ''}
         </div>
       </div>`;
     });
