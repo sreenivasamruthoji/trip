@@ -561,6 +561,7 @@ function getToday() {
 function buildUI() {
   const today = getToday();
   const todayIdx = TRIP.findIndex(d => d.date === today);
+  const firstIdx = todayIdx >= 0 ? todayIdx : 0;
   const tripStart = new Date(TRIP[0].date);
   const tripEnd = new Date(TRIP[TRIP.length-1].date);
   const nowDate = new Date(today);
@@ -577,7 +578,7 @@ function buildUI() {
   const tabsEl = document.getElementById('day-tabs');
   const contentEl = document.getElementById('content');
 
-  // Overview tab (first)
+  // Overview tab
   const ovTab = document.createElement('div');
   ovTab.className = 'day-tab';
   ovTab.id = 'tab-overview';
@@ -585,12 +586,7 @@ function buildUI() {
   ovTab.onclick = () => showOverview();
   tabsEl.appendChild(ovTab);
 
-  const ovPanel = document.createElement('div');
-  ovPanel.className = 'day-panel';
-  ovPanel.id = 'panel-overview';
-  ovPanel.innerHTML = buildOverview();
-  contentEl.appendChild(ovPanel);
-
+  // Create all tab buttons (lightweight — just text)
   TRIP.forEach((d, i) => {
     const btn = document.createElement('div');
     btn.className = 'day-tab' + (d.date === today ? ' today-tab' : '');
@@ -600,17 +596,37 @@ function buildUI() {
     tabsEl.appendChild(btn);
   });
 
+  // Create placeholder panels for all days
+  const ovPanel = document.createElement('div');
+  ovPanel.className = 'day-panel';
+  ovPanel.id = 'panel-overview';
+  contentEl.appendChild(ovPanel);
+
   TRIP.forEach((d, i) => {
     const panel = document.createElement('div');
     panel.className = 'day-panel';
     panel.id = 'panel-' + i;
-    panel.innerHTML = buildPanel(d, d.date === today, i);
     contentEl.appendChild(panel);
   });
 
-  // Default: show today or overview
-  if (todayIdx >= 0) showDay(todayIdx);
-  else showOverview();
+  // Render first visible panel immediately, then rest after paint
+  const renderFirst = () => {
+    document.getElementById('panel-' + firstIdx).innerHTML = buildPanel(TRIP[firstIdx], todayIdx === firstIdx, firstIdx);
+    showDay(firstIdx);
+  };
+  renderFirst();
+
+  // Build remaining panels lazily after first paint
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.getElementById('panel-overview').innerHTML = buildOverview();
+      TRIP.forEach((d, i) => {
+        if (i !== firstIdx) {
+          document.getElementById('panel-' + i).innerHTML = buildPanel(d, d.date === today, i);
+        }
+      });
+    }, 50);
+  });
 }
 
 function buildOverview() {
@@ -770,7 +786,9 @@ function buildPanel(d, isToday, idx) {
 function showOverview() {
   document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-overview').classList.add('active');
+  const panel = document.getElementById('panel-overview');
+  if (!panel.innerHTML.trim()) panel.innerHTML = buildOverview();
+  panel.classList.add('active');
   document.getElementById('tab-overview').classList.add('active');
   document.getElementById('tab-overview').scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
   window.scrollTo({top:0, behavior:'smooth'});
@@ -783,6 +801,11 @@ function showDay(idx) {
   document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
   currentDay = idx;
+  const panel = document.getElementById('panel-' + idx);
+  // Build on demand if not yet rendered
+  if (!panel.innerHTML.trim()) {
+    panel.innerHTML = buildPanel(TRIP[idx], TRIP[idx].date === getToday(), idx);
+  }
   document.getElementById('panel-' + idx).classList.add('active');
   const tab = document.getElementById('tab-' + idx);
   tab.classList.add('active');
