@@ -225,6 +225,13 @@
     .tag-kids { background: rgba(46,204,113,0.12); color: #5de87a; border: 1px solid rgba(46,204,113,0.25); }
     .tag-food { background: rgba(247,161,79,0.15); color: var(--accent2); border: 1px solid rgba(247,161,79,0.3); }
 
+    /* ── Trip stats row ── */
+    .trip-stats { display: flex; gap: 8px; padding: 10px 10px 0; overflow-x: auto; scrollbar-width: none; }
+    .trip-stats::-webkit-scrollbar { display: none; }
+    .stat-chip { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 13px; display: flex; align-items: center; gap: 6px; }
+    .stat-chip .sc-icon { font-size: 1rem; }
+    .stat-chip .sc-val { font-size: 0.78rem; font-weight: 800; }
+    .stat-chip .sc-lbl { font-size: 0.6rem; color: var(--muted); }
     /* ── Hero backgrounds per destination ── */
     .day-hero { position: relative; overflow: hidden; }
     .day-hero.hero-purple { background: linear-gradient(135deg, #1a1040 0%, #2d1060 100%); }
@@ -234,7 +241,12 @@
     .day-hero.hero-ocean  { background: linear-gradient(135deg, #041020 0%, #0b2040 100%); }
     .day-hero.hero-navy   { background: linear-gradient(135deg, #060818 0%, #0e1535 100%); }
     .day-hero.hero-gold   { background: linear-gradient(135deg, #1a1002 0%, #2e1e06 100%); }
-    .hero-photo { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.08; pointer-events: none; border-radius: 16px; }
+    /* ── Drive chip ── */
+    .drive-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.2); border-radius: 20px; padding: 4px 10px; font-size: 0.68rem; color: #7fb3ff; margin-bottom: 7px; }
+    /* ── Scrolled hero shrink ── */
+    .day-hero-top { transition: all 0.2s; }
+    .hero-photo { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.18; pointer-events: none; border-radius: 16px; filter: blur(1px) saturate(0.7); transition: opacity 0.4s; }
+    .day-hero:hover .hero-photo { opacity: 0.25; }
 
     /* ── AI Chat ── */
     .ai-fab { position: fixed; bottom: 82px; right: 16px; z-index: 400; background: linear-gradient(135deg, #4f8ef7, #7b3fff); color: #fff; border: none; border-radius: 28px; padding: 11px 16px; font-size: 0.82rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 20px rgba(79,142,247,0.5); display: flex; align-items: center; gap: 7px; white-space: nowrap; }
@@ -507,6 +519,20 @@ let currentDay = 0;
 // Hero theme per day index
 const DAY_THEMES = ['purple','teal','teal','red','green','navy','teal','gold','purple','gray'];
 
+// Background photos per day (Unsplash direct photo IDs — no API key needed)
+const DAY_PHOTOS = [
+  'photo-1558618666-fcd25c85cd64', // highway road trip Quebec
+  'photo-1506905925346-21bda4d32df4', // waterfall / river
+  'photo-1571019613454-1cb2f99b2d8b', // Bay of Fundy / ocean
+  'photo-1507525428034-b723cf961d3e', // red sand beach PEI
+  'photo-1441974231531-c6227db76b6e', // Cape Breton highland cliffs
+  'photo-1499678329028-101435549a4e', // coastal lighthouse Nova Scotia
+  'photo-1559827260-dc66d52bef19', // whale / ocean
+  'photo-1519178614-68673b201f36', // Montreal city skyline
+  'photo-1474181487882-5abf3f0ba6c2', // highway home
+  'photo-1501854140801-50d01698950b', // nature scenic
+];
+
 // Quick suggested stops/highlights for overview
 const HIGHLIGHTS = [
   {icon:"🌊", name:"Hopewell Rocks (Flower Pot Rocks)", note:"Walk on the ocean floor at low tide — #1 kids highlight of the trip", day:"Aug 2", tags:["must","kids"]},
@@ -590,25 +616,38 @@ function buildOverview() {
     'Silver Dart Lodge Baddeck ✅','15456 Cabot Trail, Chéticamp ✅','Digby Pines Golf Resort ✅',
     'Days Inn Moncton ✅','Montreal (to book)','–','–'
   ];
-  let html = `<div class="section-card" style="margin-bottom:10px">
+
+  // Stats row
+  let html = `<div class="trip-stats">
+    <div class="stat-chip"><span class="sc-icon">🗓️</span><div><div class="sc-val">9 Days</div><div class="sc-lbl">Jul 31–Aug 8</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">🚗</span><div><div class="sc-val">~3,800 km</div><div class="sc-lbl">Total driving</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">🏨</span><div><div class="sc-val">8 Nights</div><div class="sc-lbl">6 hotels booked</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">⛴️</span><div><div class="sc-val">2 Ferries</div><div class="sc-lbl">Both booked ✅</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">🐋</span><div><div class="sc-val">Whale Watch</div><div class="sc-lbl">Aug 6 · 1:30 PM ✅</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">👨‍👩‍👧‍👦</span><div><div class="sc-val">7 People</div><div class="sc-lbl">5 adults · 2 kids</div></div></div>
+  </div>`;
     <div class="section-title"><span>🗓️</span> Full Trip Calendar — Aug 2026</div>
     <div class="overview-grid">`;
   TRIP.forEach((d,i) => {
     const hasHotel = d.hotels.length > 0;
-    html += `<div class="cal-card ${hasHotel ? 'booked-stop' : ''}" onclick="showDay(${i})">
+    const photoId = DAY_PHOTOS[i] || DAY_PHOTOS[0];
+    const photoUrl = `https://images.unsplash.com/${photoId}?w=400&q=50&fit=crop&auto=format`;
+    html += `<div class="cal-card ${hasHotel ? 'booked-stop' : ''}" onclick="showDay(${i})" style="background-image:linear-gradient(135deg,var(--card) 60%,transparent);position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background-image:url('${photoUrl}');background-size:cover;background-position:center;opacity:0.12;border-radius:14px"></div>
       <div class="cal-card-bar bar-${BAR[i]}"></div>
-      <div style="padding-left:8px">
+      <div style="padding-left:8px;position:relative;z-index:1">
         <div class="cal-card-date">${d.dow} · ${d.month} ${d.day}</div>
         <div class="cal-card-day">${d.day}</div>
         <div class="cal-card-title">${d.title}</div>
         <div class="cal-card-city">📍 ${d.city}</div>
-        ${HOTEL_NAMES[i] ? `<div class="cal-card-hotel">🏨 ${HOTEL_NAMES[i]}</div>` : ''}
+        ${HOTEL_NAMES[i] && HOTEL_NAMES[i]!=='–' ? `<div class="cal-card-hotel">🏨 ${HOTEL_NAMES[i]}</div>` : ''}
       </div>
     </div>`;
   });
   html += `</div></div>`;
 
   // Must-see highlights
+  // Calendar grid
   html += `<div class="section-card" style="margin-bottom:10px"><div class="section-title"><span>⭐</span> Must-See Highlights & Recommended Stops</div>`;
   html += `<div class="highlight-list">`;
   HIGHLIGHTS.forEach(h => {
@@ -648,9 +687,12 @@ function buildPanel(d, isToday, idx) {
   const theme = DAY_THEMES[idx] || 'teal';
   let html = '';
 
-  // Hero card with theme
+  // Hero card with theme + background photo
+  const photoId = DAY_PHOTOS[idx] || DAY_PHOTOS[0];
+  const photoUrl = `https://images.unsplash.com/${photoId}?w=900&q=60&fit=crop&crop=entropy&auto=format`;
   html += `<div class="day-hero hero-${theme}">
-    <div class="day-hero-top">
+    <div class="hero-photo" style="background-image:url('${photoUrl}')"></div>
+    <div class="day-hero-top" style="position:relative;z-index:1">
       <div class="day-num">
         <div class="month-lbl">${d.month}</div>
         <div class="num">${d.day}</div>
@@ -663,11 +705,12 @@ function buildPanel(d, isToday, idx) {
     </div>`;
 
   if (d.drive) {
-    html += `<div class="drive-summary">🚗 <strong>${d.drive.summary}</strong><br>${d.drive.from} → ${d.drive.to}${d.drive.via ? '<br><span style="font-size:0.7rem">via ' + d.drive.via + '</span>' : ''}</div>`;
-    html += `<div class="map-btns">
+    html += `<div style="position:relative;z-index:1"><div class="drive-chip">🚗 ${d.drive.summary}</div>
+    <div style="font-size:0.68rem;color:var(--muted);margin-bottom:8px;line-height:1.4">${d.drive.from} → ${d.drive.to}${d.drive.via ? '<br><span style="opacity:0.7">via ' + d.drive.via + '</span>' : ''}</div>
+    <div class="map-btns">
       <a href="${d.drive.gmaps}" target="_blank" class="map-btn">🗺️ Google Maps</a>
       <a href="${d.drive.waze}" target="_blank" class="map-btn waze">🟢 Waze</a>
-    </div>`;
+    </div></div>`;
   }
   html += '</div>';
 
