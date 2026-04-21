@@ -609,12 +609,9 @@ function buildUI() {
     contentEl.appendChild(panel);
   });
 
-  // Render first visible panel immediately, then rest after paint
-  const renderFirst = () => {
-    document.getElementById('panel-' + firstIdx).innerHTML = buildPanel(TRIP[firstIdx], todayIdx === firstIdx, firstIdx);
-    showDay(firstIdx);
-  };
-  renderFirst();
+  // Render overview immediately as the default landing page
+  document.getElementById('panel-overview').innerHTML = buildOverview();
+  showOverview();
 
   // Build remaining panels lazily after first paint
   requestAnimationFrame(() => {
