@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>🚗 Canada Road Trip 2026</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --card: #1a1d27;
+      --accent: #4f8ef7;
+      --accent2: #f7a14f;
+      --green: #2ecc71;
+      --text: #e8eaf0;
+      --muted: #8b90a0;
+      --border: #2a2d3a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* Login overlay */
+    #login-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #login-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 28px;
+      width: 90%; max-width: 340px;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+    #login-box .lock-icon { font-size: 2.4rem; margin-bottom: 10px; }
+    #login-box h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 4px; }
+    #login-box p { font-size: 0.75rem; color: var(--muted); margin-bottom: 20px; }
+    #login-box input {
+      width: 100%; padding: 12px 16px;
+      border-radius: 12px; border: 1.5px solid var(--border);
+      background: var(--bg); color: var(--text);
+      font-size: 1rem; outline: none;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+    #login-box input:focus { border-color: var(--accent); }
+    #login-btn {
+      width: 100%; padding: 13px;
+      border-radius: 12px; border: none;
+      background: var(--accent); color: #fff;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer;
+    }
+    #login-btn:active { opacity: 0.8; }
+    #login-error {
+      margin-top: 10px; font-size: 0.75rem;
+      color: #e74c3c; display: none;
+    }
+    body.locked { overflow: hidden; }
+
+    header {
+      background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #1a2a6c 100%);
+      padding: 16px 14px 12px;
+      text-align: center;
+      position: sticky; top: 0; z-index: 200;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.6);
+    }
+    header h1 { font-size: 1.15rem; font-weight: 800; letter-spacing: 0.5px; }
+    .header-sub { font-size: 0.72rem; color: #ccd; margin-top: 3px; opacity: 0.85; }
+    .progress-bar { height: 5px; background: rgba(255,255,255,0.15); margin-top: 10px; border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #4f8ef7, #f7a14f); border-radius: 4px; transition: width 0.5s; }
+
+    .day-tabs {
+      display: flex; overflow-x: auto; gap: 6px;
+      padding: 10px 10px 0;
+      scrollbar-width: none;
+      background: var(--bg);
+      position: sticky; top: 90px; z-index: 150;
+    }
+    .day-tabs::-webkit-scrollbar { display: none; }
+    .day-tab {
+      flex-shrink: 0;
+      padding: 7px 13px;
+      border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      cursor: pointer;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .day-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .day-tab.today-tab { border-color: var(--accent2); color: var(--accent2); }
+    .day-tab.today-tab.active { background: var(--accent2); color: #fff; }
+
+    .content { padding: 10px 10px 80px; max-width: 600px; margin: 0 auto; }
+    .day-panel { display: none; animation: fadeIn 0.2s ease; }
+    .day-panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .day-hero {
+      background: linear-gradient(135deg, #1a2040, #2a1a40);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    .day-hero-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .day-num { text-align: center; min-width: 52px; }
+    .day-num .month-lbl { font-size: 0.58rem; text-transform: uppercase; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+    .day-num .num { font-size: 2.2rem; font-weight: 900; line-height: 1; }
+    .day-num .dow-lbl { font-size: 0.6rem; color: var(--muted); }
+    .day-info h2 { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+    .day-info .city-tag { display: inline-block; margin-top: 4px; background: rgba(247,161,79,0.15); color: var(--accent2); border: 1px solid rgba(247,161,79,0.3); border-radius: 12px; padding: 2px 10px; font-size: 0.7rem; font-weight: 700; }
+    .today-badge { background: var(--accent2); color: #fff; font-size: 0.6rem; font-weight: 800; padding: 3px 8px; border-radius: 20px; letter-spacing: 0.5px; margin-left: 8px; vertical-align: middle; }
+
+    .map-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .map-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 11px 14px; border-radius: 12px;
+      font-size: 0.82rem; font-weight: 700;
+      text-decoration: none;
+      background: #1c3d7a; color: #7fb3ff;
+      border: 1px solid #2a5099;
+      flex: 1; min-width: 140px; justify-content: center;
+    }
+    .map-btn:active { opacity: 0.75; }
+    .map-btn.waze { background: #1a3a1a; color: #5de87a; border-color: #2a622a; }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .section-title {
+      padding: 11px 14px;
+      font-size: 0.78rem; font-weight: 800;
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+    .section-title span { font-size: 1rem; }
+
+    .act-list { padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; }
+    .act-item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; background: var(--bg); border-radius: 10px; }
+    .act-icon { font-size: 1.1rem; min-width: 26px; text-align: center; margin-top: 1px; }
+    .act-text strong { font-size: 0.85rem; display: block; margin-bottom: 1px; }
+    .act-text span { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+    .alert-item {
+      margin: 0 0 10px;
+      background: #2a1505;
+      border: 1px solid #7a3810;
+      border-radius: 12px;
+      padding: 10px 13px;
+      font-size: 0.78rem;
+      color: #f9c06a;
+      line-height: 1.5;
+    }
+    .alert-item b { display: block; margin-bottom: 2px; font-size: 0.8rem; }
+
+    .hotel-list { padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; }
+    .hotel-card { background: var(--bg); border-radius: 12px; padding: 11px 12px; border: 1px solid var(--border); }
+    .hotel-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 5px; }
+    .hotel-name { font-size: 0.88rem; font-weight: 700; line-height: 1.3; }
+    .hotel-stars { font-size: 0.7rem; color: #f7c94f; letter-spacing: 1px; white-space: nowrap; }
+    .hotel-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 7px; line-height: 1.4; }
+    .hotel-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .hotel-tag { font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; background: rgba(79,142,247,0.1); color: #7fb3ff; border: 1px solid rgba(79,142,247,0.2); }
+    .hotel-tag.green { background: rgba(46,204,113,0.1); color: #5de87a; border-color: rgba(46,204,113,0.2); }
+    .hotel-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .hotel-btn {
+      flex: 1; min-width: 100px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+      padding: 9px 10px; border-radius: 10px;
+      font-size: 0.75rem; font-weight: 700;
+      text-decoration: none;
+    }
+    .hotel-btn.booking { background: #003580; color: #7ec8ff; border: 1px solid #1a5caa; }
+    .hotel-btn.maps { background: #1c3d1c; color: #5de87a; border: 1px solid #2a622a; }
+    .hotel-card.booked { border-color: #2ecc71; background: #0d1f12; }
+    .hotel-card.booked .hotel-name { color: #5de87a; }
+    .booked-badge { display:inline-block; background:#2ecc71; color:#fff; font-size:0.62rem; font-weight:800; padding:2px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; letter-spacing:0.3px; }
+    .section-title.booked-section { border-bottom-color: rgba(46,204,113,0.3); color: #5de87a; }
+
+    .food-list { padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; }
+    .food-card { background: var(--bg); border-radius: 12px; padding: 11px 12px; border: 1px solid var(--border); }
+    .food-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+    .food-name { font-size: 0.88rem; font-weight: 700; }
+    .food-type { font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+    .food-type.indian { background: rgba(247,161,79,0.15); color: var(--accent2); border: 1px solid rgba(247,161,79,0.3); }
+    .food-type.local { background: rgba(79,142,247,0.1); color: #7fb3ff; border: 1px solid rgba(79,142,247,0.2); }
+    .food-type.family { background: rgba(46,204,113,0.1); color: #5de87a; border: 1px solid rgba(46,204,113,0.2); }
+    .food-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
+    .food-kids { font-size: 0.72rem; color: #f9c06a; margin-bottom: 6px; }
+    .food-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 13px; border-radius: 8px;
+      font-size: 0.73rem; font-weight: 700;
+      text-decoration: none;
+      background: #1c2a3d; color: #7fb3ff;
+      border: 1px solid #2a4070;
+    }
+
+    .book-link-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin: 0 0 10px;
+      padding: 13px 14px;
+      background: #3d2000;
+      border: 1px solid #7a4010;
+      border-radius: 12px;
+      font-size: 0.82rem; font-weight: 700;
+      color: #f7c06a;
+      text-decoration: none;
+    }
+    .book-link-btn:active { opacity: 0.75; }
+
+    .drive-summary { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+    .drive-summary strong { color: var(--text); }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #12151f;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around;
+      padding: 8px 0 14px;
+      z-index: 300;
+    }
+    .nav-btn { flex: 1; text-align: center; font-size: 0.62rem; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; padding: 4px; }
+    .nav-btn .nav-icon { font-size: 1.35rem; }
+    .nav-btn.active { color: var(--accent); }
+
+    /* ── Overview Calendar ── */
+    .overview-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; padding: 10px; }
+    .cal-card { background: var(--bg); border: 1.5px solid var(--border); border-radius: 14px; padding: 11px 12px; position: relative; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
+    .cal-card:active { opacity: 0.8; }
+    .cal-card.booked-stop { border-color: rgba(46,204,113,0.35); }
+    .cal-card-date { font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 3px; }
+    .cal-card-day { font-size: 1.6rem; font-weight: 900; line-height: 1; color: var(--text); }
+    .cal-card-title { font-size: 0.78rem; font-weight: 700; margin: 4px 0 2px; line-height: 1.3; }
+    .cal-card-city { font-size: 0.68rem; color: var(--accent2); }
+    .cal-card-hotel { font-size: 0.64rem; color: #5de87a; margin-top: 5px; line-height: 1.4; }
+    .cal-card-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 14px 0 0 14px; }
+    .bar-purple { background: #7b3fff; }
+    .bar-teal   { background: #00b4cc; }
+    .bar-red    { background: #e74c3c; }
+    .bar-green  { background: #2ecc71; }
+    .bar-ocean  { background: #1a78c2; }
+    .bar-navy   { background: #4f8ef7; }
+    .bar-gold   { background: #f7c94f; }
+    .bar-gray   { background: var(--muted); }
+    .overview-section-hdr { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); padding: 14px 12px 7px; border-top: 1px solid var(--border); margin-top: 4px; }
+    .highlight-list { padding: 0 10px 12px; display: flex; flex-direction: column; gap: 7px; }
+    .highlight-item { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; display: flex; gap: 10px; align-items: flex-start; }
+    .highlight-icon { font-size: 1.15rem; min-width: 26px; text-align: center; margin-top: 1px; }
+    .highlight-text strong { font-size: 0.82rem; display: block; margin-bottom: 1px; }
+    .highlight-text span { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+    .highlight-tag { display: inline-block; font-size: 0.62rem; padding: 1px 7px; border-radius: 8px; margin-right: 4px; font-weight: 700; vertical-align: middle; }
+    .tag-must { background: rgba(231,76,60,0.15); color: #e74c3c; border: 1px solid rgba(231,76,60,0.3); }
+    .tag-kids { background: rgba(46,204,113,0.12); color: #5de87a; border: 1px solid rgba(46,204,113,0.25); }
+    .tag-food { background: rgba(247,161,79,0.15); color: var(--accent2); border: 1px solid rgba(247,161,79,0.3); }
+
+    /* ── Trip stats row ── */
+    .trip-stats { display: flex; gap: 8px; padding: 10px 10px 0; overflow-x: auto; scrollbar-width: none; }
+    .trip-stats::-webkit-scrollbar { display: none; }
+    .stat-chip { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 13px; display: flex; align-items: center; gap: 6px; }
+    .stat-chip .sc-icon { font-size: 1rem; }
+    .stat-chip .sc-val { font-size: 0.78rem; font-weight: 800; }
+    .stat-chip .sc-lbl { font-size: 0.6rem; color: var(--muted); }
+    /* ── Hero backgrounds per destination ── */
+    .day-hero { position: relative; overflow: hidden; }
+    .day-hero.hero-purple { background: linear-gradient(135deg, #1a1040 0%, #2d1060 100%); }
+    .day-hero.hero-teal   { background: linear-gradient(135deg, #071e2e 0%, #0a3545 100%); }
+    .day-hero.hero-red    { background: linear-gradient(135deg, #2b0a06 0%, #4a1a10 100%); }
+    .day-hero.hero-green  { background: linear-gradient(135deg, #071a08 0%, #0f2b12 100%); }
+    .day-hero.hero-ocean  { background: linear-gradient(135deg, #041020 0%, #0b2040 100%); }
+    .day-hero.hero-navy   { background: linear-gradient(135deg, #060818 0%, #0e1535 100%); }
+    .day-hero.hero-gold   { background: linear-gradient(135deg, #1a1002 0%, #2e1e06 100%); }
+    /* ── Drive chip ── */
+    .drive-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.2); border-radius: 20px; padding: 4px 10px; font-size: 0.68rem; color: #7fb3ff; margin-bottom: 7px; }
+    /* ── Scrolled hero shrink ── */
+    .day-hero-top { transition: all 0.2s; }
+    .hero-photo { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.18; pointer-events: none; border-radius: 16px; filter: blur(1px) saturate(0.7); transition: opacity 0.4s; }
+    .day-hero:hover .hero-photo { opacity: 0.25; }
+
+    /* ── AI Chat ── */
+    .ai-fab { position: fixed; bottom: 82px; right: 16px; z-index: 400; background: linear-gradient(135deg, #4f8ef7, #7b3fff); color: #fff; border: none; border-radius: 28px; padding: 11px 16px; font-size: 0.82rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 20px rgba(79,142,247,0.5); display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .ai-fab span { font-size: 1.1rem; }
+    .ai-backdrop { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.65); display: none; align-items: flex-end; justify-content: center; }
+    .ai-backdrop.open { display: flex; }
+    .ai-box { background: var(--card); border-radius: 22px 22px 0 0; width: 100%; max-width: 600px; max-height: 82vh; display: flex; flex-direction: column; border: 1px solid var(--border); border-bottom: none; }
+    .ai-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .ai-header-info h3 { font-size: 0.95rem; font-weight: 800; }
+    .ai-header-info p { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+    .ai-close { background: rgba(255,255,255,0.08); border: none; color: var(--text); font-size: 1.1rem; cursor: pointer; padding: 6px 10px; border-radius: 10px; }
+    .ai-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 9px; }
+    .ai-msg { padding: 9px 13px; border-radius: 14px; font-size: 0.8rem; line-height: 1.55; max-width: 88%; }
+    .ai-msg.user { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .ai-msg.bot  { background: var(--bg); color: var(--text); align-self: flex-start; border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .ai-msg.typing { color: var(--muted); font-style: italic; background: var(--bg); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .ai-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 12px 8px; border-top: 1px solid var(--border); }
+    .ai-chip { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 5px 11px; font-size: 0.69rem; color: var(--muted); cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+    .ai-chip:active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .ai-input-row { display: flex; gap: 8px; padding: 10px 12px 22px; }
+    .ai-input { flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 13px; color: var(--text); font-size: 0.82rem; outline: none; font-family: inherit; }
+    .ai-input:focus { border-color: var(--accent); }
+    .ai-send { background: var(--accent); border: none; color: #fff; border-radius: 12px; padding: 10px 15px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+    .ai-send:disabled { opacity: 0.5; cursor: default; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🍁 Canada Road Trip · Aug 2026</h1>
+  <div class="header-sub" id="header-date">Loading...</div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+</header>
+
+<div class="day-tabs" id="day-tabs"></div>
+<div class="content" id="content"></div>
+
+<div class="bottom-nav">
+  <div class="nav-btn" id="nav-prev" onclick="shiftDay(-1)">
+    <div class="nav-icon">◀️</div>Prev
+  </div>
+  <div class="nav-btn active" id="nav-today" onclick="goToday()">
+    <div class="nav-icon">📍</div>Today
+  </div>
+  <div class="nav-btn" id="nav-next" onclick="shiftDay(1)">
+    <div class="nav-icon">▶️</div>Next
+  </div>
+</div>
+
+<script>
+const TRIP = [
+  {
+    date:"2026-07-31", dow:"Fri", month:"Jul", day:31,
+    title:"Burlington → Drummondville",
+    city:"Drummondville, QC",
+    drive:{summary:"~5 hrs drive", from:"Burlington, ON", to:"Drummondville, QC", via:"QEW → Hwy 401 E → Hwy 20 E", gmaps:"https://www.google.com/maps/dir/Burlington,+ON/Drummondville,+QC", waze:"https://waze.com/ul?ll=45.8833,-72.4833&navigate=yes"},
+    activities:[
+      {icon:"🚗", label:"Depart Burlington at 3:00 PM", note:"~5 hrs to Drummondville · QEW → 401 E → 20 E · Arrive ~8:00–8:30 PM"},
+      {icon:"🛑", label:"Rest stop: near Cornwall / Quebec border (~2 hrs in)", note:"Quick stretch & snacks for the kids · Tim Hortons at most highway exits"},
+      {icon:"🛑", label:"Quick break: Montreal area (~30 min)", note:"Optional fuel & snack stop at Laval/Montreal exit if needed"},
+      {icon:"🏨", label:"Check in — Best Western Hotel Universel Drummondville", note:"Check-in from 4:00 PM (arriving ~8:30 PM) · 915 rue Hains, Drummondville QC · ✅ BOOKED"}
+    ],
+    alerts:[],
+    hotels:[
+      {name:"Best Western Hotel Universel Drummondville", stars:"★★★★", meta:"915 rue Hains, Drummondville QC J2C3A1 · Check-in: Jul 31 at 4:00 PM · Check-out: Aug 1 at 12:00 PM · Phone: 1-819-478-4971", tags:["4 Stars","Pool","Restaurant","Parking"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Best+Western+Universel+Drummondville", maps:"https://www.google.com/maps/search/Best+Western+Hotel+Universel+915+rue+Hains+Drummondville", booked:true}
+    ],
+    food:[
+      {name:"Indian / Halal — search Drummondville", type:"indian", typeLabel:"🍛 Indian", meta:"Search Google Maps for Indian or Halal restaurants in Drummondville QC on arrival", kids:"✅ Familiar food on day 1", maps:"https://www.google.com/maps/search/Indian+restaurant+Drummondville+QC"},
+      {name:"Tim Hortons / McDonald's (highway stops)", type:"family", typeLabel:"🍟 Quick", meta:"Multiple options at highway exits along Hwy 401 & 20 — good for lunch on the go", kids:"✅ Kids love Timbits on road trips", maps:"https://www.google.com/maps/search/Tim+Hortons+Hwy+401+Ontario"},
+      {name:"Resto La Facette — Drummondville", type:"local", typeLabel:"🍽️ Local", meta:"Popular local restaurant in Drummondville · Good casual dinner after a long drive", kids:"✅ Family-friendly atmosphere", maps:"https://www.google.com/maps/search/restaurant+Drummondville+QC"}
+    ]
+  },
+  {
+    date:"2026-08-01", dow:"Sat", month:"Aug", day:1,
+    title:"Drummondville → Grand Falls → Moncton",
+    city:"Moncton, NB",
+    drive:{summary:"~6.5 hrs total with Grand Falls stop", from:"Drummondville, QC", to:"Moncton, NB", via:"Hwy 20 E → Trans-Canada → Grand Falls, NB → Moncton", gmaps:"https://www.google.com/maps/dir/Drummondville,+QC/Grand+Falls,+NB/Moncton,+NB", waze:"https://waze.com/ul?ll=46.0487,-64.7878&navigate=yes"},
+    activities:[
+      {icon:"⏰", label:"Check out by 12:00 PM & start early", note:"Long drive day — early start means more daylight at Grand Falls"},
+      {icon:"💧", label:"Grand Falls Gorge (Grand-Sault)", note:"Stunning gorge & waterfall · Free entry · 45 min stop · Great photo spot — well worth the detour"},
+      {icon:"🥪", label:"Lunch in Grand Falls", note:"Good rest stop — stretch legs, feed the kids"},
+      {icon:"🚗", label:"Continue to Moncton", note:"~2.5 hrs from Grand Falls on Trans-Canada"},
+      {icon:"🏨", label:"Check in — Holiday Inn Express Moncton", note:"Check-in from 3:00 PM · 777 Mapleton Drive · ✅ BOOKED · 2 nights here!"}
+    ],
+    alerts:[],
+    hotels:[
+      {name:"Holiday Inn Express & Suites Moncton", stars:"★★★", meta:"777 Mapleton Drive, Moncton NB E1G2K5 · Check-in: Aug 1 at 3:00 PM · Check-out: Aug 3 at 12:00 PM (2 nights) · Phone: 1-506-854-2929", tags:["Free Breakfast","Pool","2 Nights Booked"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Holiday+Inn+Express+Moncton", maps:"https://www.google.com/maps/search/Holiday+Inn+Express+Suites+777+Mapleton+Drive+Moncton", booked:true}
+    ],
+    food:[
+      {name:"Indian roadside stop (Grand Falls area)", type:"indian", typeLabel:"🍛 Indian", meta:"Search for Indian restaurants near Grand Falls NB for a familiar lunch mid-drive", kids:"✅ Familiar food keeps kids happy on a long drive day", maps:"https://www.google.com/maps/search/Indian+restaurant+Grand+Falls+NB"},
+      {name:"Cora Breakfast & Lunch — Moncton", type:"family", typeLabel:"🥞 Family", meta:"Popular Canadian chain · Huge fresh portions · Great for families", kids:"✅ Kids menu, fresh fruit with every meal — always a hit", maps:"https://www.google.com/maps/search/Cora+Restaurant+Moncton"},
+      {name:"Pump House Brewery", type:"local", typeLabel:"🍺 Local", meta:"4.2★ · Best pub food in Moncton · Burgers, wings, good kids menu", kids:"✅ Lively atmosphere, solid kids menu", maps:"https://www.google.com/maps/search/Pump+House+Brewery+Moncton"}
+    ]
+  },
+  {
+    date:"2026-08-02", dow:"Sun", month:"Aug", day:2,
+    title:"Moncton Sightseeing Day",
+    city:"Moncton, NB",
+    drive:{summary:"Sightseeing loop ~3 hrs total driving", from:"Holiday Inn Express Moncton", to:"Holiday Inn Express Moncton", via:"Hopewell Rocks → Dickson Falls → Cape Enrage → Shediac → Magnetic Hill", gmaps:"https://www.google.com/maps/dir/Moncton,+NB/Hopewell+Rocks,+NB/Cape+Enrage,+NB/Shediac,+NB/Magnetic+Hill,+Moncton,+NB", waze:"https://waze.com/ul?ll=45.8682,-64.5918&navigate=yes"},
+    activities:[
+      {icon:"🌊", label:"Hopewell Rocks (Flower Pot Rocks)", note:"Go at LOW TIDE — walk on the ocean floor between 15m high rock formations. Kids LOVE this! Check tides: hopewell.rocks/tides · $8-10/person"},
+      {icon:"💧", label:"Dickson Falls — Fundy National Park", note:"Easy 1km loop boardwalk through old-growth forest. All ages manage it well."},
+      {icon:"🏔️", label:"Cape Enrage Lighthouse & Cliffs", note:"Dramatic cliffs overlooking Bay of Fundy · Rappelling available · Free to walk"},
+      {icon:"🦞", label:"Shediac — Lobster Capital of the World", note:"20 min from Moncton · Giant lobster statue photo op! · Try a lobster roll for lunch"},
+      {icon:"🌀", label:"Magnetic Hill", note:"Optical illusion — your car appears to roll uphill! Kids will beg to repeat 😄 · $5/car"}
+    ],
+    alerts:["🌊 Check tide times at hopewell.rocks/tides — you MUST go at low tide to walk on the ocean floor. This is the #1 highlight of the trip for kids!"],
+    hotels:[
+      {name:"Holiday Inn Express & Suites Moncton (Night 2 of 2)", stars:"★★★", meta:"777 Mapleton Drive, Moncton NB · 2nd night of 2 · Check-out: Aug 3 at 12:00 PM · Phone: 1-506-854-2929", tags:["Night 2 of 2","Pool","Free Breakfast"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Holiday+Inn+Express+Moncton", maps:"https://www.google.com/maps/search/Holiday+Inn+Express+Suites+777+Mapleton+Drive+Moncton", booked:true}
+    ],
+    food:[
+      {name:"Tidal Watch Inn Restaurant (near Hopewell)", type:"local", typeLabel:"🦞 Seafood", meta:"Right near Hopewell Rocks · Fresh local seafood · Good lunch stop mid-sightseeing", kids:"✅ Fish & chips that kids enjoy", maps:"https://www.google.com/maps/search/restaurant+near+Hopewell+Rocks+NB"},
+      {name:"Shediac Lobster Shop", type:"local", typeLabel:"🦞 Local", meta:"Classic fresh lobster rolls & seafood right in Shediac at great prices", kids:"⚠️ Fish & chips option for the kids", maps:"https://www.google.com/maps/search/Lobster+Shop+Shediac+NB"},
+      {name:"Taj Indian Cuisine Moncton", type:"indian", typeLabel:"🍛 Indian", meta:"4.0★ · Good biryani, curries, vegetarian options · Dinner back in Moncton", kids:"✅ Warm familiar dinner after a big day out", maps:"https://www.google.com/maps/search/Taj+Indian+Cuisine+Moncton"}
+    ]
+  },
+  {
+    date:"2026-08-03", dow:"Mon", month:"Aug", day:3,
+    title:"PEI Bridge · Cavendish Beach · Ferry → NS",
+    city:"Baddeck, NS",
+    drive:{summary:"~5.5 hrs driving + 75 min ferry", from:"Moncton, NB", to:"Baddeck, NS (Cape Breton)", via:"Confederation Bridge → PEI → Charlottetown → Wood Islands Ferry → Pictou NS → Baddeck", gmaps:"https://www.google.com/maps/dir/Moncton,+NB/Cape+Jourimain,+NB/Charlottetown,+PE/Wood+Islands,+PE", waze:"https://waze.com/ul?ll=46.1009,-60.7322&navigate=yes"},
+    activities:[
+      {icon:"🌉", label:"Drive over Confederation Bridge to PEI", note:"12.9 km — world's longest bridge over ice-covered water · Pull over at lookout for photos!"},
+      {icon:"🏖️", label:"Cavendish Beach, PEI", note:"Red sand beaches · Ocean swimming · Build sandcastles · Kids will love the warm water · 1–2 hrs"},
+      {icon:"📖", label:"Green Gables Heritage Place", note:"Anne of Green Gables historic house · 5 min from Cavendish · Great for the girls!"},
+      {icon:"🍽️", label:"Lunch in Charlottetown", note:"Capital of PEI — waterfront restaurants, great fresh seafood"},
+      {icon:"⛴️", label:"Northumberland Ferry: Wood Islands → Pictou NS — 6:00 PM ✅ BOOKED", note:"Departure 6:00 PM · 75 min crossing · Has cafeteria on board · Arrive Pictou ~7:15 PM · Then ~2.5 hrs drive to Baddeck"},
+      {icon:"🚗", label:"Drive Pictou → Baddeck", note:"~2.5 hrs through stunning Cape Breton landscape"}
+    ],
+    alerts:["⛴️ Northumberland Ferry booked at 6:00 PM ✅ — Wood Islands → Pictou. Aim to arrive at the ferry terminal by 5:15 PM. After landing in Pictou (~7:15 PM), it's ~2.5 hrs drive to Baddeck. Arrive ~9:45 PM — plan a simple dinner en route."],
+    hotels:[
+      {name:"Silver Dart Lodge — Baddeck", stars:"★★★★", meta:"Baddeck, NS · Check-in: Aug 3 at 3:00 PM · Check-out: Aug 4 at 11:00 AM · Itinerary: 73422205028898 · Beautiful waterfront lodge on Lake Bras d'Or", tags:["Lake Views","Waterfront","Restaurant"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Silver+Dart+Lodge+Baddeck", maps:"https://www.google.com/maps/search/Silver+Dart+Lodge+Baddeck+Nova+Scotia", booked:true}
+    ],
+    food:[
+      {name:"Charlottetown Farmers Market", type:"family", typeLabel:"🥗 Market", meta:"Fresh local food, sandwiches, pastries — perfect lunch stop in Charlottetown", kids:"✅ Kids love the variety and fresh desserts", maps:"https://www.google.com/maps/search/Charlottetown+Farmers+Market+PEI"},
+      {name:"Baddeck Lobster Suppers", type:"local", typeLabel:"🦞 Experience", meta:"Iconic Nova Scotia experience — unlimited chowder, mussels, bread + lobster!", kids:"⚠️ Adults will love this · Kids can have dessert and bread", maps:"https://www.google.com/maps/search/Baddeck+Lobster+Suppers+Nova+Scotia"},
+      {name:"Indian / Halal – search on arrival", type:"indian", typeLabel:"🍛 Indian", meta:"Limited Indian restaurants in rural NS — search Google Maps on arrival or pack snacks", kids:"✅ Backup: Grocery stores in Baddeck for familiar food", maps:"https://www.google.com/maps/search/Indian+restaurant+Baddeck+Nova+Scotia"}
+    ]
+  },
+  {
+    date:"2026-08-04", dow:"Tue", month:"Aug", day:4,
+    title:"Cabot Trail Scenic Drive",
+    city:"Chéticamp, NS",
+    drive:{summary:"~3 hrs scenic driving (full day with stops)", from:"Baddeck, NS (Silver Dart Lodge — check out by 11am)", to:"Chéticamp, NS", via:"Cabot Trail · Cape Breton Highlands · Skyline Trail", gmaps:"https://www.google.com/maps/dir/Baddeck,+NS/Cape+Breton+Highlands+National+Park/Cheticamp,+NS", waze:"https://waze.com/ul?ll=46.6242,-60.9781&navigate=yes"},
+    activities:[
+      {icon:"🏨", label:"Check out Silver Dart Lodge by 11:00 AM", note:"Pack up & hit the Cabot Trail!"},
+      {icon:"🚗", label:"Drive the Cabot Trail (one of Canada's greatest scenic drives!)", note:"Dozens of ocean lookouts — stop at every single one · Slow and enjoy it"},
+      {icon:"🥾", label:"Skyline Trail Hike", note:"4.5 km easy loop · Incredible ocean views from clifftop · Kids handle it well · 1.5–2 hrs"},
+      {icon:"🦅", label:"Mary Ann Falls", note:"Short walk to a beautiful waterfall — kids love waterfalls!"},
+      {icon:"🌊", label:"Cabot Trail North Mountain Lookouts", note:"Pull off for photos at every lookout heading north — views are jaw-dropping"},
+      {icon:"🏘️", label:"Arrive Chéticamp — check in by 4:00 PM", note:"Check-in from 16:00 · 15456 Cabot Trail, Chéticamp · ✅ BOOKED · 2 rooms"}
+    ],
+    alerts:[],
+    hotels:[
+      {name:"Booked Accommodation — Cabot Trail, Chéticamp", stars:"★★★", meta:"15456 Cabot Trail, B0E 1H0 Chéticamp, NS · Check-in: Aug 4 from 4:00 PM · Check-out: Aug 5 by 11:00 AM · 2 rooms · 5 adults + 2 children (ages 7 & 10)", tags:["2 Rooms","Cabot Trail","Scenic"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=15456+Cabot+Trail+Cheticamp", maps:"https://www.google.com/maps/search/15456+Cabot+Trail+Cheticamp+Nova+Scotia", booked:true}
+    ],
+    food:[
+      {name:"Restaurant Étoile du Matin — Chéticamp", type:"local", typeLabel:"🦞 Acadian", meta:"Best Acadian cooking in Chéticamp · Fish cakes, rappie pie, fresh seafood", kids:"✅ Home-style cooking the kids will enjoy", maps:"https://www.google.com/maps/search/restaurant+Cheticamp+Nova+Scotia"},
+      {name:"Co-op Restaurant — Chéticamp", type:"local", typeLabel:"🍽️ Local", meta:"Traditional Acadian cuisine · Very popular with locals · Great fresh fish", kids:"✅ Simple, good food everyone can enjoy", maps:"https://www.google.com/maps/search/Co-op+Restaurant+Cheticamp"},
+      {name:"Pack Indian snacks from Moncton / trail picnic", type:"indian", typeLabel:"🎒 Tip", meta:"Very limited Indian food options on the trail. Recommend packing rotis, rice dishes from Moncton the night before.", kids:"✅ Familiar food on a big hiking day", maps:"https://www.google.com/maps/search/grocery+store+Cheticamp"}
+    ]
+  },
+  {
+    date:"2026-08-05", dow:"Wed", month:"Aug", day:5,
+    title:"Finish Cabot Trail → Digby Pines Resort",
+    city:"Digby, NS",
+    drive:{summary:"~4.5 hrs driving", from:"Chéticamp, NS (check out by 11am)", to:"Digby, NS", via:"Inverness · Margaree · Trans-Canada Hwy 104 → Hwy 101 W → Digby", gmaps:"https://www.google.com/maps/dir/Cheticamp,+NS/Inverness,+NS/Digby,+NS", waze:"https://waze.com/ul?ll=44.6209,-65.7607&navigate=yes"},
+    activities:[
+      {icon:"🏨", label:"Check out Chéticamp by 11:00 AM", note:"Pack up and continue south on the Cabot Trail"},
+      {icon:"🏖️", label:"Inverness Beach", note:"Long sandy beach on Cape Breton's west coast — great for a morning swim stop"},
+      {icon:"🌿", label:"Margaree Valley", note:"Drive through lush Scottish highland-like valley · Perfect photo stop"},
+      {icon:"🚗", label:"Cross back to mainland NS via Trans-Canada", note:"~2 hrs from Cape Breton to Annapolis Valley area"},
+      {icon:"🏰", label:"Fort Anne National Historic Site — Annapolis Royal (en route)", note:"Quick 30-min stop · Kids love the old earthworks & cannons · Free admission for kids"},
+      {icon:"🌸", label:"Arrive Digby Pines Golf Resort", note:"Check-in from 4:00 PM · Stunning hillside resort overlooking Annapolis Basin · ✅ BOOKED"}
+    ],
+    alerts:[],
+    hotels:[
+      {name:"Digby Pines Golf Resort and Spa", stars:"★★★★", meta:"Digby, NS · Check-in: Aug 5 at 4:00 PM · Check-out: Aug 6 at 11:00 AM · Itinerary: 73426010909609 · Stunning hillside resort overlooking Annapolis Basin · Golf, Spa & Pool on site", tags:["Golf","Spa","Ocean Views","Pool","Restaurant"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Digby+Pines+Golf+Resort+NS", maps:"https://www.google.com/maps/search/Digby+Pines+Golf+Resort+and+Spa+Digby+NS", booked:true}
+    ],
+    food:[
+      {name:"Pines Dining Room — Digby Pines Resort", type:"local", typeLabel:"🍽️ Resort", meta:"On-site restaurant at Digby Pines · Fresh Nova Scotia seafood · Great treat after a big drive day!", kids:"✅ Great setting, varied menu — treat the family tonight!", maps:"https://www.google.com/maps/search/Digby+Pines+Golf+Resort+restaurant"},
+      {name:"Café / stop en route — Annapolis Valley", type:"family", typeLabel:"☕ Café", meta:"Good stop along the Annapolis Valley route · Sandwiches, coffee, baked goods for lunch", kids:"✅ Good quick lunch stop mid-drive", maps:"https://www.google.com/maps/search/cafe+Annapolis+Valley+Nova+Scotia"},
+      {name:"Digby Wharf Seafood (next morning)", type:"local", typeLabel:"🦞 Seafood", meta:"Digby is famous for its SCALLOPS — best in Canada! · Grab some from the wharf before heading out Aug 6", kids:"⚠️ Fish & chips option for kids", maps:"https://www.google.com/maps/search/seafood+wharf+Digby+Nova+Scotia"}
+    ]
+  },
+  {
+    date:"2026-08-06", dow:"Thu", month:"Aug", day:6,
+    title:"Digby → Whale Watch → Moncton",
+    city:"Moncton, NB",
+    drive:{summary:"~4 hrs direct drive (or ~5.5 hrs via Bay Ferries)", from:"Digby, NS (check out by 11am)", to:"Moncton, NB", via:"Option A (Recommended): Digby → Windsor → Truro → Amherst → Moncton (~4 hrs) | Option B: Bay Ferries Digby→Saint John + drive to Moncton (~5.5 hrs)", gmaps:"https://www.google.com/maps/dir/Digby,+NS/Windsor,+NS/Truro,+NS/Amherst,+NS/Moncton,+NB", waze:"https://waze.com/ul?ll=46.0487,-64.7878&navigate=yes"},
+    activities:[
+      {icon:"🐋", label:"Brier Island Whale Watch — 1:30 PM ✅ BOOKED", note:"3–4 hr boat tour departing 1:30 PM · Humpback & Finback whales · Kids will remember this forever! · Depart Digby Pines by 10:30 AM to reach Brier Island in time"},
+      {icon:"🏨", label:"Check out Digby Pines by 11:00 AM", note:"Grab Digby scallops from the wharf before leaving!"},
+      {icon:"🚗", label:"Option A — Direct drive to Moncton (Recommended)", note:"Digby → Windsor → Truro → Amherst → Moncton · ~4 hrs · Straightforward highway · Arrive in time to check in comfortably"},
+      {icon:"⛴️", label:"Option B — Bay Ferries: Digby → Saint John + drive to Moncton", note:"~3 hr crossing + 1.5 hr drive to Moncton · Great ocean scenery · Book in advance if choosing this · Adds 1.5 hrs vs direct drive"},
+      {icon:"🏨", label:"Check in — Days Inn & Suites Moncton", note:"Check-in from 3:00 PM · 2515 Mountain Road · ✅ BOOKED · Last night of the Maritime adventure!"}
+    ],
+    alerts:[
+      "🐋 Brier Island Whale Watch booked at 1:30 PM ✅ — Depart Digby Pines by 10:30 AM. Drive to Westport, Brier Island (~1.5 hrs including 2 short ferry crossings). Tour ends ~4:30–5:00 PM. Then drive to Moncton (~4 hrs) — arrive ~9:00 PM. Pack snacks for the kids!",
+      "⛴️ If taking Bay Ferries (Digby → Saint John): book in advance. Direct drive to Moncton via Truro is faster and simpler."
+    ],
+    bookLink:{label:"⛴️ Optional: Book Bay Ferries Digby → Saint John", url:"https://www.bayferries.com"},
+    hotels:[
+      {name:"Days Inn & Suites by Wyndham Moncton", stars:"★★★", meta:"2515 Mountain Road, Moncton NB E1G2W4 · Check-in: Aug 6 at 3:00 PM · Check-out: Aug 7 at 11:00 AM · Phone: 1-506-384-1050", tags:["Pool","Free Breakfast","Parking"], greenTags:["BOOKED ✅"], booking:"https://www.booking.com/search.html?ss=Days+Inn+Suites+Moncton", maps:"https://www.google.com/maps/search/Days+Inn+Suites+2515+Mountain+Road+Moncton", booked:true}
+    ],
+    food:[
+      {name:"Sitar Indian Restaurant — Moncton", type:"indian", typeLabel:"🍛 Indian", meta:"Best Indian food in Moncton · Curries, biryani, vegetarian — perfect after days of Nova Scotia seafood!", kids:"✅ Kids will love the familiar flavours after a long journey", maps:"https://www.google.com/maps/search/Indian+restaurant+Moncton+NB"},
+      {name:"Pump House Brewery", type:"local", typeLabel:"🍺 Local", meta:"Great pub food — burgers, wings · Easy family dinner near Days Inn", kids:"✅ Kids menu available", maps:"https://www.google.com/maps/search/Pump+House+Brewery+Moncton"},
+      {name:"Tim Hortons — highway stops en route", type:"family", typeLabel:"☕ Quick", meta:"Multiple Tims along Truro/Amherst/Moncton highway corridor · Perfect noon quick break", kids:"✅ Timbits en route!", maps:"https://www.google.com/maps/search/Tim+Hortons+Truro+NS"}
+    ]
+  },
+  {
+    date:"2026-08-07", dow:"Fri", month:"Aug", day:7,
+    title:"Moncton → Montreal",
+    city:"Montreal, QC",
+    drive:{summary:"~8 hrs drive", from:"Moncton, NB (check out by 11am)", to:"Montreal, QC", via:"Trans-Canada Hwy 2 W → Hwy 20 W · via Rivière-du-Loup", gmaps:"https://www.google.com/maps/dir/Moncton,+NB/Montreal,+QC", waze:"https://waze.com/ul?ll=45.5017,-73.5673&navigate=yes"},
+    activities:[
+      {icon:"🚗", label:"Check out & hit the road early (8am)", note:"Long final drive day — ~8 hrs to Montreal"},
+      {icon:"🛑", label:"Rest stop: Rivière-du-Loup, QC (~4 hrs)", note:"Excellent halfway point · Gas, food, washrooms · Great St. Lawrence River views"},
+      {icon:"🛑", label:"Optional quick stop: Québec City (~30 min)", note:"Drive through Old Québec or take a riverside walk — beautiful fortified skyline"},
+      {icon:"🏨", label:"Arrive & check in Montreal", note:"Evening stroll on Old Port waterfront — kids love the cobblestones & street performers"},
+      {icon:"🎉", label:"Celebration dinner", note:"Almost home! Treat the family to a great dinner for completing the Maritime adventure"}
+    ],
+    alerts:[],
+    hotels:[
+      {name:"Hotel Bonaventure Montreal", stars:"★★★★", meta:"Rooftop heated outdoor pool · Family suites · Central location · Good for 1 night before final drive home", tags:["Rooftop Pool","Family Suites","Central"], greenTags:["Recommended"], booking:"https://www.booking.com/search.html?ss=Hotel+Bonaventure+Montreal", maps:"https://www.google.com/maps/search/Hotel+Bonaventure+Montreal"},
+      {name:"Delta Hotels Montreal Centre-Ville", stars:"★★★★", meta:"Spacious rooms · Indoor pool · Easy highway access out the next morning toward Toronto", tags:["Indoor Pool","Parking","Road-Trip Friendly"], greenTags:[], booking:"https://www.booking.com/search.html?ss=Delta+Hotels+Montreal+centre", maps:"https://www.google.com/maps/search/Delta+Hotels+Montreal"}
+    ],
+    food:[
+      {name:"Masala Indian Brasserie — Montreal", type:"indian", typeLabel:"🍛 Indian", meta:"Celebrate with a North Indian feast! Great for large family groups", kids:"✅ The food of home — perfect celebration dinner before final drive", maps:"https://www.google.com/maps/search/Indian+restaurant+Montreal+downtown"},
+      {name:"Schwartz's Deli — Montreal Smoked Meat", type:"local", typeLabel:"🥩 Iconic", meta:"World-famous Montreal smoked meat sandwich · A bucket-list Canadian food experience — do not skip!", kids:"✅ Sandwiches that kids absolutely love", maps:"https://www.google.com/maps/search/Schwartzs+Deli+Montreal"}
+    ]
+  },
+  {
+    date:"2026-08-08", dow:"Sat", month:"Aug", day:8,
+    title:"Montreal → Toronto — Home!",
+    city:"Toronto, ON",
+    drive:{summary:"~5.5 hrs drive", from:"Montreal, QC", to:"Toronto, ON", via:"Hwy 20 → Hwy 401 W", gmaps:"https://www.google.com/maps/dir/Montreal,+QC/Toronto,+ON", waze:"https://waze.com/ul?ll=43.6532,-79.3832&navigate=yes"},
+    activities:[
+      {icon:"🚗", label:"Morning drive: Montreal → Toronto", note:"~5.5 hrs on Hwy 401 · Straight highway, easy drive"},
+      {icon:"🛑", label:"Rest stop: Kingston, ON", note:"Perfect halfway stop · Tim Hortons, gas stations · ~2.5 hrs from Montreal"},
+      {icon:"🏠", label:"Arrive home in Toronto! 🎉", note:"9 days · ~3,000 km · One incredible family road trip!"}
+    ],
+    alerts:[],
+    hotels:[],
+    food:[
+      {name:"Tim Hortons (highway rest stops)", type:"family", typeLabel:"☕ Canadian", meta:"Classic Canadian road trip tradition · Timbits for the kids!", kids:"✅ Timbits are a non-negotiable road trip snack", maps:"https://www.google.com/maps/search/Tim+Hortons+Hwy+401+Ontario"}
+    ]
+  },
+  {
+    date:"2026-08-09", dow:"Sun", month:"Aug", day:9,
+    title:"Flex / Spare Day",
+    city:"TBD — Your Call!",
+    drive:null,
+    activities:[
+      {icon:"🗓️", label:"Buffer day — use it your way", note:"Built in for flexibility if you run long anywhere"},
+      {icon:"💡", label:"Option A: Extra day in PEI", note:"PEI deserves more time — North Cape, PEI National Park"},
+      {icon:"🌊", label:"Option B: Niagara Falls side trip from Toronto", note:"Just 1.5 hrs from Toronto — kids will love it!"},
+      {icon:"🏛️", label:"Option C: Ottawa detour", note:"On the way back, stop in Canada's capital"},
+      {icon:"😴", label:"Option D: Rest day at home", note:"7 days of driving is a lot — rest is also a great option!"}
+    ],
+    alerts:[],
+    hotels:[],
+    food:[]
+  }
+];
+
+let currentDay = 0;
+
+// Hero theme per day index
+const DAY_THEMES = ['purple','teal','teal','red','green','navy','teal','gold','purple','gray'];
+
+// Background photos — picsum.photos seeds (fast, no auth, reliable)
+// Format: https://picsum.photos/seed/SEED/900/400
+const DAY_PHOTOS = [
+  'highway',      // Jul31 – road trip
+  'river',        // Aug1  – Grand Falls
+  'ocean',        // Aug2  – Moncton/Bay of Fundy
+  'beach',        // Aug3  – PEI
+  'mountain',     // Aug4  – Cabot Trail
+  'lighthouse',   // Aug5  – NS coast
+  'whale',        // Aug6  – Digby/whale watch
+  'city',         // Aug7  – Montreal
+  'road',         // Aug8  – drive home
+  'nature',       // Aug9  – flex
+];
+function photoUrl(seed, w=900, h=380) {
+  return `https://picsum.photos/seed/${seed}/${w}/${h}`;
+}
+
+// Quick suggested stops/highlights for overview
+const HIGHLIGHTS = [
+  {icon:"🌊", name:"Hopewell Rocks (Flower Pot Rocks)", note:"Walk on the ocean floor at low tide — #1 kids highlight of the trip", day:"Aug 2", tags:["must","kids"]},
+  {icon:"🥾", name:"Skyline Trail — Cabot Trail", note:"4.5 km easy loop with jaw-dropping ocean cliff views", day:"Aug 4", tags:["must","kids"]},
+  {icon:"🐋", name:"Brier Island Whale Watch", note:"Booked 1:30 PM Aug 6 — Humpback & Finback whales guaranteed", day:"Aug 6", tags:["must","kids"]},
+  {icon:"🏖️", name:"Cavendish Beach, PEI", note:"Red sand beaches, warm ocean water, sandcastles — kids paradise", day:"Aug 3", tags:["kids"]},
+  {icon:"📖", name:"Green Gables Heritage Place, PEI", note:"Anne of Green Gables historic house — great for the girls!", day:"Aug 3", tags:["kids"]},
+  {icon:"🌀", name:"Magnetic Hill, Moncton", note:"Optical illusion — car appears to roll uphill! Kids will beg to repeat", day:"Aug 2", tags:["kids"]},
+  {icon:"🦞", name:"Shediac — Lobster Capital of the World", note:"Giant lobster statue + fresh lobster rolls right in town", day:"Aug 2", tags:["must"]},
+  {icon:"💧", name:"Grand Falls Gorge (Grand-Sault, NB)", note:"Stunning 45-min stop on the drive to Moncton — waterfall & gorge walk", day:"Aug 1", tags:["must"]},
+  {icon:"🌉", name:"Confederation Bridge, PEI", note:"12.9 km — world's longest bridge over ice-covered water — photo stop!", day:"Aug 3", tags:[]},
+  {icon:"🏰", name:"Fort Anne, Annapolis Royal", note:"Quick en-route stop — old earthworks & cannons, free for kids", day:"Aug 5", tags:["kids"]},
+  {icon:"🦞", name:"Digby Scallops — Best in Canada", note:"Grab fresh scallops from Digby wharf before leaving Aug 6 morning", day:"Aug 6", tags:["must","food"]},
+  {icon:"🥩", name:"Schwartz's Deli — Montreal Smoked Meat", note:"Bucket-list Canadian food experience on the way home Aug 7", day:"Aug 7", tags:["must","food"]},
+];
+
+function getToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function buildUI() {
+  const today = getToday();
+  const todayIdx = TRIP.findIndex(d => d.date === today);
+  const firstIdx = todayIdx >= 0 ? todayIdx : 0;
+  const tripStart = new Date(TRIP[0].date);
+  const tripEnd = new Date(TRIP[TRIP.length-1].date);
+  const nowDate = new Date(today);
+
+  document.getElementById('header-date').textContent =
+    nowDate.toLocaleDateString('en-CA', {weekday:'short', month:'long', day:'numeric', year:'numeric'});
+
+  let prog = 0;
+  if (nowDate >= tripStart && nowDate <= tripEnd) {
+    prog = Math.round(((nowDate - tripStart) / (tripEnd - tripStart)) * 100);
+  } else if (nowDate > tripEnd) prog = 100;
+  document.getElementById('progress-fill').style.width = prog + '%';
+
+  const tabsEl = document.getElementById('day-tabs');
+  const contentEl = document.getElementById('content');
+
+  // Overview tab
+  const ovTab = document.createElement('div');
+  ovTab.className = 'day-tab';
+  ovTab.id = 'tab-overview';
+  ovTab.textContent = '🗺️ Overview';
+  ovTab.onclick = () => showOverview();
+  tabsEl.appendChild(ovTab);
+
+  // Create all tab buttons (lightweight — just text)
+  TRIP.forEach((d, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'day-tab' + (d.date === today ? ' today-tab' : '');
+    btn.id = 'tab-' + i;
+    btn.textContent = (d.date === today ? '● ' : '') + d.month + ' ' + d.day;
+    btn.onclick = () => showDay(i);
+    tabsEl.appendChild(btn);
+  });
+
+  // Create placeholder panels for all days
+  const ovPanel = document.createElement('div');
+  ovPanel.className = 'day-panel';
+  ovPanel.id = 'panel-overview';
+  contentEl.appendChild(ovPanel);
+
+  TRIP.forEach((d, i) => {
+    const panel = document.createElement('div');
+    panel.className = 'day-panel';
+    panel.id = 'panel-' + i;
+    contentEl.appendChild(panel);
+  });
+
+  // Render overview immediately as the default landing page
+  document.getElementById('panel-overview').innerHTML = buildOverview();
+  showOverview();
+
+  // Build remaining panels lazily after first paint
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.getElementById('panel-overview').innerHTML = buildOverview();
+      TRIP.forEach((d, i) => {
+        if (i !== firstIdx) {
+          document.getElementById('panel-' + i).innerHTML = buildPanel(d, d.date === today, i);
+        }
+      });
+    }, 50);
+  });
+}
+
+function buildOverview() {
+  const BAR = ['purple','teal','teal','red','green','navy','teal','gold','purple','gray'];
+  const HOTEL_NAMES = [
+    'Best Western Drummondville ✅','Holiday Inn Express Moncton ✅','Holiday Inn Express Moncton ✅',
+    'Silver Dart Lodge Baddeck ✅','15456 Cabot Trail, Chéticamp ✅','Digby Pines Golf Resort ✅',
+    'Days Inn Moncton ✅','Montreal (to book)','–','–'
+  ];
+
+  // Stats row
+  let html = `<div class="trip-stats">
+    <div class="stat-chip"><span class="sc-icon">🗓️</span><div><div class="sc-val">9 Days</div><div class="sc-lbl">Jul 31–Aug 8</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">🚗</span><div><div class="sc-val">~3,800 km</div><div class="sc-lbl">Total driving</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">🏨</span><div><div class="sc-val">8 Nights</div><div class="sc-lbl">6 hotels booked</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">⛴️</span><div><div class="sc-val">2 Ferries</div><div class="sc-lbl">Both booked ✅</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">🐋</span><div><div class="sc-val">Whale Watch</div><div class="sc-lbl">Aug 6 · 1:30 PM ✅</div></div></div>
+    <div class="stat-chip"><span class="sc-icon">👨‍👩‍👧‍👦</span><div><div class="sc-val">7 People</div><div class="sc-lbl">5 adults · 2 kids</div></div></div>
+  </div>`;
+
+  // Calendar grid — NO photos here for fast load
+  html += `<div class="section-card" style="margin-bottom:10px">
+    <div class="section-title"><span>🗓️</span> Full Trip Calendar — Aug 2026</div>
+    <div class="overview-grid">`;
+  TRIP.forEach((d,i) => {
+    const hasHotel = d.hotels.length > 0;
+    html += `<div class="cal-card ${hasHotel ? 'booked-stop' : ''}" onclick="showDay(${i})">
+      <div class="cal-card-bar bar-${BAR[i]}"></div>
+      <div style="padding-left:8px">
+        <div class="cal-card-date">${d.dow} · ${d.month} ${d.day}</div>
+        <div class="cal-card-day">${d.day}</div>
+        <div class="cal-card-title">${d.title}</div>
+        <div class="cal-card-city">📍 ${d.city}</div>
+        ${HOTEL_NAMES[i] && HOTEL_NAMES[i]!=='–' ? `<div class="cal-card-hotel">🏨 ${HOTEL_NAMES[i]}</div>` : ''}
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // Must-see highlights
+  // Calendar grid
+  html += `<div class="section-card" style="margin-bottom:10px"><div class="section-title"><span>⭐</span> Must-See Highlights & Recommended Stops</div>`;
+  html += `<div class="highlight-list">`;
+  HIGHLIGHTS.forEach(h => {
+    const tagHtml = h.tags.map(t => {
+      if (t==='must') return `<span class="highlight-tag tag-must">Must Do</span>`;
+      if (t==='kids') return `<span class="highlight-tag tag-kids">Kids ❤️</span>`;
+      if (t==='food') return `<span class="highlight-tag tag-food">Food</span>`;
+      return '';
+    }).join('');
+    html += `<div class="highlight-item">
+      <div class="highlight-icon">${h.icon}</div>
+      <div class="highlight-text">
+        <strong>${h.name} <span style="font-size:0.62rem;color:var(--muted);font-weight:400">${h.day}</span></strong>
+        ${tagHtml}
+        <span>${h.note}</span>
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // Booked items summary
+  html += `<div class="section-card"><div class="section-title"><span>✅</span> All Confirmed Bookings</div><div class="act-list">
+    <div class="act-item"><div class="act-icon">🏨</div><div class="act-text"><strong>Best Western Hotel Universel — Drummondville</strong><span>Jul 31 check-in 4pm → Aug 1 check-out 12pm · Itinerary on file</span></div></div>
+    <div class="act-item"><div class="act-icon">🏨</div><div class="act-text"><strong>Holiday Inn Express & Suites — Moncton (2 nights)</strong><span>Aug 1 3pm → Aug 3 12pm · 777 Mapleton Drive · Ph: 1-506-854-2929</span></div></div>
+    <div class="act-item"><div class="act-icon">⛴️</div><div class="act-text"><strong>Northumberland Ferry — Wood Islands → Pictou</strong><span>Aug 3 at 6:00 PM ✅ BOOKED · Arrive terminal by 5:15 PM</span></div></div>
+    <div class="act-item"><div class="act-icon">🏨</div><div class="act-text"><strong>Silver Dart Lodge — Baddeck, NS</strong><span>Aug 3 3pm → Aug 4 11am · Itinerary: 73422205028898</span></div></div>
+    <div class="act-item"><div class="act-icon">🏨</div><div class="act-text"><strong>Booked Accommodation — 15456 Cabot Trail, Chéticamp</strong><span>Aug 4 4pm → Aug 5 11am · 2 rooms · 5 adults + 2 children</span></div></div>
+    <div class="act-item"><div class="act-icon">🏨</div><div class="act-text"><strong>Digby Pines Golf Resort and Spa</strong><span>Aug 5 4pm → Aug 6 11am · Itinerary: 73426010909609</span></div></div>
+    <div class="act-item"><div class="act-icon">🐋</div><div class="act-text"><strong>Brier Island Whale Watch</strong><span>Aug 6 at 1:30 PM ✅ BOOKED · Leave Digby Pines by 10:30 AM</span></div></div>
+    <div class="act-item"><div class="act-icon">🏨</div><div class="act-text"><strong>Days Inn & Suites by Wyndham — Moncton</strong><span>Aug 6 3pm → Aug 7 11am · 2515 Mountain Road · Ph: 1-506-384-1050</span></div></div>
+  </div></div>`;
+
+  return html;
+}
+
+function buildPanel(d, isToday, idx) {
+  const theme = DAY_THEMES[idx] || 'teal';
+  let html = '';
+
+  // Hero card with theme — photo injected lazily by showDay()
+  html += `<div class="day-hero hero-${theme}" id="hero-${idx}">
+    <div class="hero-photo" id="hero-photo-${idx}"></div>
+    <div class="day-hero-top" style="position:relative;z-index:1">
+      <div class="day-num">
+        <div class="month-lbl">${d.month}</div>
+        <div class="num">${d.day}</div>
+        <div class="dow-lbl">${d.dow}</div>
+      </div>
+      <div class="day-info" style="flex:1">
+        <h2>${d.title}${isToday ? ' <span class="today-badge">TODAY</span>' : ''}</h2>
+        <span class="city-tag">📍 ${d.city}</span>
+      </div>
+    </div>`;
+
+  if (d.drive) {
+    html += `<div style="position:relative;z-index:1"><div class="drive-chip">🚗 ${d.drive.summary}</div>
+    <div style="font-size:0.68rem;color:var(--muted);margin-bottom:8px;line-height:1.4">${d.drive.from} → ${d.drive.to}${d.drive.via ? '<br><span style="opacity:0.7">via ' + d.drive.via + '</span>' : ''}</div>
+    <div class="map-btns">
+      <a href="${d.drive.gmaps}" target="_blank" class="map-btn">🗺️ Google Maps</a>
+      <a href="${d.drive.waze}" target="_blank" class="map-btn waze">🟢 Waze</a>
+    </div></div>`;
+  }
+  html += '</div>';
+
+  // Alerts
+  d.alerts.forEach(a => html += `<div class="alert-item"><b>⚠️ Action Required</b>${a}</div>`);
+
+  // Book link
+  if (d.bookLink) html += `<a href="${d.bookLink.url}" target="_blank" class="book-link-btn">${d.bookLink.label}</a>`;
+
+  // Activities
+  html += `<div class="section-card"><div class="section-title"><span>🗓️</span> Day Plan</div><div class="act-list">`;
+  d.activities.forEach(a => {
+    html += `<div class="act-item"><div class="act-icon">${a.icon}</div><div class="act-text"><strong>${a.label}</strong><span>${a.note}</span></div></div>`;
+  });
+  html += '</div></div>';
+
+  // Hotels
+  if (d.hotels.length) {
+    const hasBooked = d.hotels.some(h => h.booked);
+    const sectionTitle = hasBooked ? '✅ Your Booked Hotel' : '🏨 Recommended Hotels';
+    const titleClass = hasBooked ? 'section-title booked-section' : 'section-title';
+    html += `<div class="section-card"><div class="${titleClass}"><span>${hasBooked ? '✅' : '🏨'}</span> ${hasBooked ? 'Your Booked Hotel' : 'Recommended Hotels'}</div><div class="hotel-list">`;
+    d.hotels.forEach(h => {
+      const cardClass = h.booked ? 'hotel-card booked' : 'hotel-card';
+      html += `<div class="${cardClass}">
+        <div class="hotel-top"><div class="hotel-name">${h.name}${h.booked ? '<span class="booked-badge">BOOKED ✅</span>' : ''}</div><div class="hotel-stars">${h.stars}</div></div>
+        <div class="hotel-meta">${h.meta}</div>
+        <div class="hotel-tags">${h.tags.map(t=>`<span class="hotel-tag">${t}</span>`).join('')}${h.greenTags.filter(t=>t!=='BOOKED ✅').map(t=>`<span class="hotel-tag green">${t}</span>`).join('')}</div>
+        <div class="hotel-btns">
+          <a href="${h.maps}" target="_blank" class="hotel-btn maps">📍 Map &amp; Directions</a>
+          ${!h.booked ? `<a href="${h.booking}" target="_blank" class="hotel-btn booking">🛏️ Booking.com</a>` : ''}
+        </div>
+      </div>`;
+    });
+    html += '</div></div>';
+  }
+
+  // Food
+  if (d.food.length) {
+    html += `<div class="section-card"><div class="section-title"><span>🍽️</span> Food — For Your Indian Family</div><div class="food-list">`;
+    d.food.forEach(f => {
+      html += `<div class="food-card">
+        <div class="food-top"><div class="food-name">${f.name}</div><span class="food-type ${f.type}">${f.typeLabel}</span></div>
+        <div class="food-meta">${f.meta}</div>
+        <div class="food-kids">${f.kids}</div>
+        <a href="${f.maps}" target="_blank" class="food-btn">📍 Find on Maps</a>
+      </div>`;
+    });
+    html += '</div></div>';
+  }
+
+  return html;
+}
+
+function showOverview() {
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById('panel-overview');
+  if (!panel.innerHTML.trim()) panel.innerHTML = buildOverview();
+  panel.classList.add('active');
+  document.getElementById('tab-overview').classList.add('active');
+  document.getElementById('tab-overview').scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// Track which photos have been loaded already
+const _loadedPhotos = new Set();
+
+function showDay(idx) {
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  currentDay = idx;
+  const panel = document.getElementById('panel-' + idx);
+  // Build on demand if not yet rendered
+  if (!panel.innerHTML.trim()) {
+    panel.innerHTML = buildPanel(TRIP[idx], TRIP[idx].date === getToday(), idx);
+  }
+  document.getElementById('panel-' + idx).classList.add('active');
+  const tab = document.getElementById('tab-' + idx);
+  tab.classList.add('active');
+  tab.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  window.scrollTo({top:0, behavior:'smooth'});
+  // Lazy-load hero photo only when this day is first shown
+  if (!_loadedPhotos.has(idx)) {
+    _loadedPhotos.add(idx);
+    const el = document.getElementById('hero-photo-' + idx);
+    if (el) {
+      const seed = DAY_PHOTOS[idx] || 'nature';
+      const url = photoUrl(seed);
+      const img = new Image();
+      img.onload = () => { el.style.backgroundImage = `url('${url}')`; };
+      img.src = url;
+    }
+  }
+}
+
+function goToday() {
+  const today = getToday();
+  const idx = TRIP.findIndex(d => d.date === today);
+  showDay(idx >= 0 ? idx : 0);
+}
+
+function shiftDay(delta) {
+  const next = currentDay + delta;
+  if (next >= 0 && next < TRIP.length) showDay(next);
+}
+
+// ── AI Trip Assistant ──
+const AI_CONTEXT = `You are a helpful travel assistant for a family road trip through Eastern Canada. Key details:
+- Family: 5 adults + 2 kids (ages 7 and 10), Indian family from Burlington, ON
+- Dates: July 31 – Aug 8, 2026
+- Route: Burlington → Drummondville QC → Moncton NB (2 nights + sightseeing) → PEI (Cavendish, Green Gables, Confederation Bridge) → Baddeck NS → Cabot Trail/Chéticamp → Digby NS → Moncton → Montreal → Burlington
+- Booked hotels: Best Western Drummondville (Jul31-Aug1), Holiday Inn Express Moncton (Aug1-3), Silver Dart Lodge Baddeck (Aug3-4), 15456 Cabot Trail Chéticamp 2 rooms (Aug4-5), Digby Pines Golf Resort (Aug5-6), Days Inn Moncton (Aug6-7)
+- Booked activities: Northumberland Ferry at 6pm Aug 3, Brier Island Whale Watch at 1:30pm Aug 6
+- Family likes: Indian/South Asian food when available, family-friendly stops, kids love waterfalls/beaches/animals
+Answer concisely in 2-4 sentences. Be specific and practical.`;
+
+const AI_CHIPS = [
+  "What to pack for kids?","Best rest stops Burlington→Drummondville?","Hopewell Rocks tide times Aug 2?",
+  "Good Indian food in Moncton?","Cabot Trail driving tips?","What time leave for Brier Island Aug 6?",
+  "PEI activities for kids?","Weather in August NS?","Northumberland Ferry tips?"
+];
+
+let aiTyping = false;
+
+function openAI() {
+  document.getElementById('ai-backdrop').classList.add('open');
+  document.getElementById('ai-input').focus();
+}
+function closeAI() {
+  document.getElementById('ai-backdrop').classList.remove('open');
+}
+
+function renderChips() {
+  const el = document.getElementById('ai-chips');
+  el.innerHTML = AI_CHIPS.map(c => `<div class="ai-chip" onclick="sendAI('${c.replace(/'/g,"\\'")}')"> ${c}</div>`).join('');
+}
+
+async function sendAI(text) {
+  if (aiTyping) return;
+  const input = document.getElementById('ai-input');
+  const msgs = document.getElementById('ai-messages');
+  const btn = document.getElementById('ai-send');
+  const q = text || input.value.trim();
+  if (!q) return;
+  input.value = '';
+
+  msgs.innerHTML += `<div class="ai-msg user">${q}</div>`;
+  msgs.innerHTML += `<div class="ai-msg typing" id="ai-typing">✦ Thinking…</div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  aiTyping = true;
+  btn.disabled = true;
+
+  try {
+    const prompt = AI_CONTEXT + '\n\nQuestion: ' + q + '\n\nAnswer:';
+    const resp = await fetch('https://text.pollinations.ai/' + encodeURIComponent(prompt));
+    const answer = await resp.text();
+    document.getElementById('ai-typing').remove();
+    msgs.innerHTML += `<div class="ai-msg bot">${answer.trim()}</div>`;
+  } catch(e) {
+    document.getElementById('ai-typing').remove();
+    msgs.innerHTML += `<div class="ai-msg bot">Sorry, couldn't get a response. Check your connection and try again.</div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+  aiTyping = false;
+  btn.disabled = false;
+}
+
+buildUI();
+renderChips();
+</script>
+
+<!-- AI Chat Panel -->
+<button class="ai-fab" onclick="openAI()"><span>🤖</span> Ask Trip AI</button>
+<div class="ai-backdrop" id="ai-backdrop" onclick="if(event.target===this)closeAI()">
+  <div class="ai-box">
+    <div class="ai-header">
+      <div class="ai-header-info">
+        <h3>🤖 Trip Assistant</h3>
+        <p>Ask anything about your Canada road trip · Powered by AI</p>
+      </div>
+      <button class="ai-close" onclick="closeAI()">✕</button>
+    </div>
+    <div class="ai-messages" id="ai-messages">
+      <div class="ai-msg bot">Hi! I'm your Canada road trip assistant 🍁 Ask me anything — packing tips, driving routes, activities for the kids, restaurant suggestions, or any questions about your booked hotels & itinerary!</div>
+    </div>
+    <div class="ai-chips" id="ai-chips"></div>
+    <div class="ai-input-row">
+      <input class="ai-input" id="ai-input" placeholder="Ask a question…" onkeydown="if(event.key==='Enter')sendAI()">
+      <button class="ai-send" id="ai-send" onclick="sendAI()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Login overlay -->
+<div id="login-overlay">
+  <div id="login-box">
+    <div class="lock-icon">🔒</div>
+    <h2>Canada Road Trip 2026</h2>
+    <p>Enter the password to continue</p>
+    <input type="password" id="login-pass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()" autofocus />
+    <button id="login-btn" onclick="doLogin()">Unlock</button>
+    <div id="login-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var PASS = 'nstrip';
+  var SESSION_KEY = 'trip_auth';
+  function showApp() {
+    var overlay = document.getElementById('login-overlay');
+    overlay.style.display = 'none';
+    document.body.classList.remove('locked');
+  }
+  // Check session storage so user doesn't re-enter on refresh
+  if (sessionStorage.getItem(SESSION_KEY) === '1') { showApp(); }
+  else { document.body.classList.add('locked'); }
+  window.doLogin = function() {
+    var val = document.getElementById('login-pass').value;
+    if (val === PASS) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      showApp();
+    } else {
+      var err = document.getElementById('login-error');
+      err.style.display = 'block';
+      document.getElementById('login-pass').value = '';
+      document.getElementById('login-pass').focus();
+    }
+  };
+})();
+</script>
+</body>
+</html>
