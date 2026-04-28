@@ -353,7 +353,7 @@ const TRIP = [
     drive:{summary:"~6.5 hrs total with Grand Falls stop", from:"915 rue Hains, Drummondville, QC J2C 3A1", to:"Holiday Inn Express & Suites Moncton, 777 Mapleton Drive, Moncton, NB E1G 2K5", via:"Hwy 20 E → Trans-Canada → Grand Falls Gorge → Moncton", gmaps:"https://www.google.com/maps/dir/915+rue+Hains,+Drummondville,+QC+J2C+3A1/Grand+Falls+Gorge,+Grand+Falls,+NB/777+Mapleton+Drive,+Moncton,+NB+E1G+2K5", waze:"https://waze.com/ul?q=777%20Mapleton%20Drive%20Moncton%20NB%20E1G%202K5&navigate=yes"},
     activities:[
       {icon:"⏰", label:"Check out by 12:00 PM & start early", note:"Long drive day — early start means more daylight at Grand Falls"},
-      {icon:"💧", label:"Grand Falls Gorge (Grand-Sault)", note:"Stunning gorge & waterfall · Free entry · 45 min stop · Great photo spot — well worth the detour"},
+      {icon:"💧", label:"Grand Falls Gorge (Grand-Sault)", note:"Stunning gorge & waterfall · Free entry · 45 min stop · Great photo spot — well worth the detour", maps:"https://maps.app.goo.gl/RidCSfZhTD2LJqhU9"},
       {icon:"🥪", label:"Lunch in Grand Falls", note:"Good rest stop — stretch legs, feed the kids"},
       {icon:"🚗", label:"Continue to Moncton", note:"~2.5 hrs from Grand Falls on Trans-Canada"},
       {icon:"🏨", label:"Check in — Holiday Inn Express Moncton", note:"Check-in from 3:00 PM · 777 Mapleton Drive · ✅ BOOKED · 2 nights here!"}
@@ -372,15 +372,20 @@ const TRIP = [
     date:"2026-08-02", dow:"Sun", month:"Aug", day:2,
     title:"Moncton Sightseeing Day",
     city:"Moncton, NB",
-    drive:{summary:"Sightseeing loop ~3 hrs total driving", from:"777 Mapleton Drive, Moncton, NB E1G 2K5", to:"777 Mapleton Drive, Moncton, NB E1G 2K5", via:"Hopewell Rocks → Dickson Falls → Cape Enrage → Shediac → Magnetic Hill", gmaps:"https://www.google.com/maps/dir/777+Mapleton+Drive,+Moncton,+NB+E1G+2K5/Hopewell+Rocks,+NB/Dickson+Falls,+Fundy+National+Park,+NB/Cape+Enrage,+NB/Giant+Lobster,+Shediac,+NB/Magnetic+Hill,+Moncton,+NB/777+Mapleton+Drive,+Moncton,+NB+E1G+2K5", waze:"https://waze.com/ul?q=Hopewell%20Rocks%20NB&navigate=yes"},
+    drive:{summary:"Full day loop ~5 hrs total driving (Fundy Trail + Hopewell + Cape Enrage)", from:"777 Mapleton Drive, Moncton, NB E1G 2K5", to:"777 Mapleton Drive, Moncton, NB E1G 2K5", via:"St Martins Sea Caves → Fundy Trail Parkway → Fundy NP → Hopewell Rocks → Cape Enrage → Magnetic Hill", gmaps:"https://www.google.com/maps/dir/777+Mapleton+Drive,+Moncton,+NB+E1G+2K5/St+Martins+Sea+Caves,+St+Martins,+NB/Fundy+Trail+Parkway,+NB/Fundy+National+Park,+NB/Hopewell+Rocks,+NB/Cape+Enrage,+NB/Magnetic+Hill,+Moncton,+NB/777+Mapleton+Drive,+Moncton,+NB+E1G+2K5", waze:"https://waze.com/ul?q=Hopewell%20Rocks%20NB&navigate=yes"},
     activities:[
-      {icon:"🌊", label:"Hopewell Rocks (Flower Pot Rocks)", note:"Go at LOW TIDE — walk on the ocean floor between 15m high rock formations. Kids LOVE this! Check tides: hopewell.rocks/tides · $8-10/person"},
-      {icon:"💧", label:"Dickson Falls — Fundy National Park", note:"Easy 1km loop boardwalk through old-growth forest. All ages manage it well."},
+      {icon:"🌊", label:"St Martins Sea Caves", note:"Dramatic sea caves carved by Bay of Fundy tides · Stunning rock formations · Explore inside at low tide · ~1.5 hrs from Moncton", maps:"https://maps.app.goo.gl/ga3ovjwYSDFiYCAj7"},
+      {icon:"🏔️", label:"Fownes Head Lookout — Fundy Trail Parkway", note:"Sweeping panoramic ocean views over the Bay of Fundy · Short walk to viewpoint", maps:"https://maps.app.goo.gl/aQVc3Cw19uAHcRQbA"},
+      {icon:"💧", label:"Fuller Falls — Fundy Trail Parkway", note:"Beautiful waterfall in the Fundy Trail wilderness · Short trail walk · Kids love it", maps:"https://maps.app.goo.gl/3TSKFZJjZRhS6HvS6"},
+      {icon:"🏖️", label:"Melvin Beach — Fundy Trail Parkway", note:"Secluded beach on Bay of Fundy · Great for a quick walk or splash", maps:"https://maps.app.goo.gl/3z51huHoRzGwTBzB9"},
+      {icon:"👁️", label:"Long Beach Lookout — Fundy Trail Parkway", note:"Cliff-top views over Long Beach · Stunning photo opportunity", maps:"https://maps.app.goo.gl/y4k3unM5gPkmTzA2A"},
+      {icon:"💧", label:"Walton Gen George Falls ⭐ Must Visit", note:"Beautiful hidden waterfall — must see! Spectacular scenery", maps:"https://maps.app.goo.gl/puV1rNgyhbHVLG1JA"},
+      {icon:"🌿", label:"Fundy National Park — Laverty Falls & Dickson Falls", note:"Laverty Falls: short trail to a stunning multi-tiered waterfall · Dickson Falls: easy 1km boardwalk through old-growth forest · Both well worth the walk", maps:"https://maps.app.goo.gl/6grVevE2RB64UNre7"},
+      {icon:"🌊", label:"Hopewell Rocks (Flower Pot Rocks) ⭐ Must Visit", note:"Go at LOW TIDE — walk on ocean floor between 15m rock formations! Kids LOVE this · Check tides: hopewell.rocks/tides · $8-10/person", maps:"https://maps.app.goo.gl/asdyZtJ3kAd4mwUx7"},
       {icon:"🏔️", label:"Cape Enrage Lighthouse & Cliffs", note:"Dramatic cliffs overlooking Bay of Fundy · Rappelling available · Free to walk"},
-      {icon:"🦞", label:"Shediac — Lobster Capital of the World", note:"20 min from Moncton · Giant lobster statue photo op! · Try a lobster roll for lunch"},
-      {icon:"🌀", label:"Magnetic Hill", note:"Optical illusion — your car appears to roll uphill! Kids will beg to repeat 😄 · $5/car"}
+      {icon:"🌀", label:"Magnetic Hill", note:"Optical illusion — your car appears to roll uphill! Kids will beg to repeat 😄 · $5/car", maps:"https://maps.app.goo.gl/r2rYSMwwL9xGWtHb8"}
     ],
-    alerts:["🌊 Check tide times at hopewell.rocks/tides — you MUST go at low tide to walk on the ocean floor. This is the #1 highlight of the trip for kids!"],
+    alerts:["🌊 Check tide times at hopewell.rocks/tides — you MUST go at low tide at Hopewell Rocks to walk on the ocean floor. This is the #1 highlight for kids! · This is a BIG day — start early from Moncton (by 8:00 AM). Fundy Trail Parkway → Fundy NP → Hopewell → Cape Enrage → Magnetic Hill."],
     hotels:[
       {name:"Holiday Inn Express & Suites Moncton (Night 2 of 2)", stars:"★★★", meta:"777 Mapleton Drive, Moncton NB · 2nd night of 2 · Check-out: Aug 3 at 12:00 PM · Phone: 1-506-854-2929", tags:["Night 2 of 2","Pool","Free Breakfast"], greenTags:["BOOKED ✅"], maps:"https://www.google.com/maps/search/Holiday+Inn+Express+Suites+777+Mapleton+Drive+Moncton", booked:true}
     ],
@@ -396,8 +401,11 @@ const TRIP = [
     city:"Baddeck, NS",
     drive:{summary:"~5.5 hrs driving + 75 min ferry", from:"777 Mapleton Drive, Moncton, NB E1G 2K5", to:"Silver Dart Lodge, Baddeck, NS", via:"Confederation Bridge → Cavendish Beach → Charlottetown → Wood Islands Ferry → Pictou → Baddeck", gmaps:"https://maps.app.goo.gl/E2W9epay53SxBHiQ7", waze:"https://waze.com/ul?q=Silver%20Dart%20Lodge%20Baddeck%20NS&navigate=yes"},
     activities:[
-      {icon:"🌉", label:"Drive over Confederation Bridge to PEI", note:"12.9 km — world's longest bridge over ice-covered water · Pull over at lookout for photos!"},
-      {icon:"🏖️", label:"Cavendish Beach, PEI", note:"Red sand beaches · Ocean swimming · Build sandcastles · Kids will love the warm water · 1–2 hrs"},
+      {icon:"🌉", label:"Drive over Confederation Bridge to PEI", note:"12.9 km — world's longest bridge over ice-covered water · Pull over at lookout for photos!", maps:"https://maps.app.goo.gl/A59EVHdLHU4HsfFD9"},
+      {icon:"🪨", label:"Mackenzie's Brook Rock Arch, PEI", note:"Unique natural rock arch formation carved by the sea · Great photo spot!", maps:"https://maps.app.goo.gl/X1GhVNATkXGYnQXv6"},
+      {icon:"🏖️", label:"Cavendish Beach, PEI ⭐ Must Visit", note:"Red sand beaches · Ocean swimming · Build sandcastles · Kids will love the warm water · 1–2 hrs", maps:"https://maps.app.goo.gl/z5xAfEyv9HE22Gyf6"},
+      {icon:"🌅", label:"Thunder Cove Beach (sunset spot)", note:"Stunning red sandstone sea stacks & cliffs · Iconic PEI coastal scenery · Perfect for golden-hour photos", maps:"https://maps.app.goo.gl/pQwYUDmHzfxriXZD7"},
+      {icon:"🏖️", label:"Cabot Beach Provincial Park (Optional)", note:"Beautiful beach on PEI's north shore · Great for swimming · Visit if time permits before heading to ferry", maps:"https://maps.app.goo.gl/CqXNcX3Zp7bqm6mA6"},
       {icon:"📖", label:"Green Gables Heritage Place", note:"Anne of Green Gables historic house · 5 min from Cavendish · Great for the girls!"},
       {icon:"🍽️", label:"Lunch in Charlottetown", note:"Capital of PEI — waterfront restaurants, great fresh seafood"},
       {icon:"⛴️", label:"Northumberland Ferry: Wood Islands → Pictou NS — 6:00 PM ✅ BOOKED", note:"Departure 6:00 PM · 75 min crossing · Has cafeteria on board · Arrive Pictou ~7:15 PM · Then ~2.5 hrs drive to Baddeck"},
@@ -759,7 +767,7 @@ function buildPanel(d, isToday, idx) {
   // Activities
   html += `<div class="section-card"><div class="section-title"><span>🗓️</span> Day Plan</div><div class="act-list">`;
   d.activities.forEach(a => {
-    html += `<div class="act-item"><div class="act-icon">${a.icon}</div><div class="act-text"><strong>${a.label}</strong><span>${a.note}</span></div></div>`;
+    html += `<div class="act-item"><div class="act-icon">${a.icon}</div><div class="act-text"><strong>${a.label}</strong><span>${a.note}</span>${a.maps ? `<a href="${a.maps}" target="_blank" class="map-btn" style="margin-top:6px;display:inline-block;font-size:0.68rem;padding:3px 10px">📍 Map</a>` : ''}</div></div>`;
   });
   html += '</div></div>';
 
