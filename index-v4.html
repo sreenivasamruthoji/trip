@@ -463,7 +463,7 @@ const TRIP = [
     date:"2026-08-06", dow:"Thu", month:"Aug", day:6,
     title:"Digby → Whale Watch → Moncton",
     city:"Moncton, NB",
-    drive:{summary:"~6.5 hrs total (Brier Island ferries + return to Digby + drive Moncton)", from:"Digby Pines Golf Resort and Spa, Digby, NS", to:"Days Inn & Suites by Wyndham Moncton, 2515 Mountain Road, Moncton, NB E1G 2W4", via:"Brier Island (2 ferries each way) → back to Digby → Windsor → Truro → Amherst → Moncton", gmaps:"https://www.google.com/maps/dir/Digby+Pines+Golf+Resort+and+Spa,+Digby,+NS/Brier+Island+Whale+Watch,+Westport,+NS/Digby,+NS/2515+Mountain+Road,+Moncton,+NB+E1G+2W4", waze:"https://waze.com/ul?q=2515%20Mountain%20Road%20Moncton%20NB%20E1G%202W4&navigate=yes"},
+    drive:{summary:"~6.5 hrs total (Brier Island ferries + return to Digby + drive Moncton)", from:"Digby Pines Golf Resort and Spa, Digby, NS", to:"Days Inn & Suites by Wyndham Moncton, 2515 Mountain Road, Moncton, NB E1G 2W4", via:"Brier Island (2 ferries each way) → return to Digby → Windsor → Truro → Amherst → Moncton", gmaps:"https://www.google.com/maps/dir/Digby+Pines+Golf+Resort+and+Spa,+Digby,+NS/Windsor,+NS/Truro,+NS/Amherst,+NS/2515+Mountain+Road,+Moncton,+NB+E1G+2W4", waze:"https://waze.com/ul?q=2515%20Mountain%20Road%20Moncton%20NB%20E1G%202W4&navigate=yes", gmaps2:"https://www.google.com/maps/dir/Digby+Pines+Golf+Resort+and+Spa,+Digby,+NS/East+Ferry,+NS/Tiverton,+Brier+Island,+NS/Freeport,+NS/Westport,+Brier+Island+Whale+Watch,+NS", gmaps2label:"🐋 Whale Watch Route"},
     activities:[
       {icon:"🐋", label:"Brier Island Whale Watch — 1:30 PM ✅ BOOKED", note:"3–4 hr boat tour departing 1:30 PM · Humpback & Finback whales · Kids will remember this forever! · Depart Digby Pines by 10:30 AM to reach Brier Island in time"},
       {icon:"🏨", label:"Check out Digby Pines by 11:00 AM", note:"Grab Digby scallops from the wharf before leaving!"},
@@ -748,6 +748,7 @@ function buildPanel(d, isToday, idx) {
     <div class="map-btns">
       <a href="${d.drive.gmaps}" target="_blank" class="map-btn">🗺️ Google Maps</a>
       <a href="${d.drive.waze}" target="_blank" class="map-btn waze">🟢 Waze</a>
+      ${d.drive.gmaps2 ? `<a href="${d.drive.gmaps2}" target="_blank" class="map-btn">${d.drive.gmaps2label || '🗺️ Alt Map'}</a>` : ''}
     </div></div>`;
   }
   html += '</div>';
